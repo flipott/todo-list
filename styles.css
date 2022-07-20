@@ -1,3 +1,138 @@
-* {
-    background: red;
+:root {
+    --bright-navy-blue: #3e78b2ff;
+    --cobalt-blue: #004ba8ff;
+    --davys-grey: #4a525aff;
+    --raisin-black: #24272bff;
+    --rich-black-fogra-39: #07070aff;
+
+    font-family: sans-serif;
+    font-family: 'Gochi Hand', cursive;
+    font-family: 'Roboto Condensed', sans-serif;
+}
+
+html, body {
+    background: var(--raisin-black);
+    color: white;
+    height: 100vh;
+    width: 100%;
+    margin: 0;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100%
+}
+
+.header {
+    background: var(--cobalt-blue);
+    font-size: 5rem;
+    height: 10%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Gochi Hand', cursive;
+}
+
+.main-content {
+    display: flex;
+    height: 100%;
+    width: 100%;
+}
+
+.sidebar {
+    background: var(--bright-navy-blue);
+    display: flex;
+    flex-direction: column;
+    width: 25%;
+    align-items: center;
+    text-align: center;
+    padding-top: 25px;
+    font-size: 1.5rem;
+}
+
+.table-section {
+    background: var(--davys-grey);
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    text-align: center;
+    padding: 80px;
+}
+
+.low {
+    color: green;
+}
+
+.sidebar-title {
+    font-size: 2.5rem;
+    margin: 0;
+    border-top: solid 2px white;
+    border-bottom: solid 2px white;
+    font-family: 'Gochi Hand', cursive;
+}
+
+.sidebar ul li {
+    list-style-type: none;
+    padding: 10px;
+    font-weight: bold;
+}
+
+
+.sidebar a {
+    text-decoration: none;
+    color: white;   
+}
+
+.sidebar ul {
+    padding: 0 0 25px 0;
+}
+
+#add-item {
+    width: fit-content;
+}
+
+.modal {
+    margin: 0;
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    background: white;
+    color: black;
+    padding: 0 25px 25px 25px;
+    width: 400px;
+    border-radius: 8px;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+}
+
+#modal-close {
+    height: fit-content;
+}
+
+#modal-form {
+    display: flex;
+    flex-direction: column;
+}
+
+input, select {
+    margin-bottom: 15px;
+}
+
+#modal-submit {
+    width: fit-content;
+    align-self: center;
+}
+
+#modal-title {
+    font-weight: bold;
 }
