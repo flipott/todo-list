@@ -11,7 +11,21 @@ const handleTask = (function() {
         console.log(itemArray);
     }
 
-    return { addItem, itemFactory }
+    function editItem(index, priority, title, description, dueDate, category) {
+        itemArray[index].priority = priority;
+        itemArray[index].title = title;
+        itemArray[index].description = description;
+        itemArray[index].dueDate = dueDate;
+        itemArray[index].category = category;
+
+        console.log(itemArray);
+    }
+
+    function deleteItem(index) {
+        itemArray.splice(index, 1);
+    }
+
+    return { addItem, itemFactory, editItem, deleteItem, itemArray }
 })();
 
 
