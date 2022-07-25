@@ -40,24 +40,6 @@
                         <th>Category</th>
                         <th>Edit</th>
                     </tr>
-                    <tr>
-                        <td><input type="checkbox" value="test" checked="checked"></td>
-                        <td><p class="low">⚫</p></td>
-                        <td>Write speech</td>
-                        <td>Finish writing speech for the important event.</td>
-                        <td>09/01/2022</td>
-                        <td>Work</td>
-                        <td><button class="edit-btn">✎</button></td>
-                    </tr>
-                    <tr>
-                        <td><input type="checkbox" value="test" checked="unchecked"></td>
-                        <td><p class="high">⚫</p></td>
-                        <td>Wash dishes</td>
-                        <td>Finish washing the dishes.</td>
-                        <td>09/01/2022</td>
-                        <td>Personal</td>
-                        <td><button class="edit-btn">✎</button></td>
-                    </tr>
                 </table>
             </div>
         </div>
@@ -93,9 +75,43 @@
 
                 <button id="modal-submit" type="button">Add item</button>
             </form>
-
         </div>
     </div>
+    
+    <div class="edit-modal">
+        <div class="modal-header">
+            <p id="modal-title">Edit item</p>
+            <button id="edit-close">x</button> 
+        </div>
+        <form id="modal-form">
+            <label for="priority">Priority</label>
+            <select id="edit-priority" name="priority">
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+            </select>
+
+            <label for="title">Title</label>
+            <input type="text" name="title" id="edit-title">
+
+            <label for="description">Description</label>
+            <input type="text" name="description" id="edit-description">
+
+            <label for="due-date">Due Date</label>
+            <input type="date" name="due-date" id="edit-date">
+
+            <label for="category">Category</label>
+            <select name="category" id="edit-category">
+                <option value="personal">Personal</option>
+                <option value="work">Work</option>
+                <option value="add">Add new category...</option>
+            </select>
+
+            <button id="edit-submit" type="button">Edit item</button>
+            <button id="delete-item" type="button">Delete item</button>
+        </form>
+    </div>
+</div>
 
 </body>
 </html>
