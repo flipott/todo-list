@@ -62,14 +62,14 @@ function displayEdit(editIndex) {
 }
 
 //Populate tasks on page
-function displayTask() {
+function displayTask(currentArray) {
 
     //Remove currently displayed data
     while (document.querySelector("tbody").childNodes.length > 1) {
         document.querySelector("tbody").removeChild(document.querySelector("tbody").lastChild);
     }
 
-    let currentArray = handleTask.itemArray;
+    // let currentArray = handleTask.itemArray;
     
     //Display new data
     for (let i=0;i<currentArray.length;i++) {
@@ -114,5 +114,9 @@ function displayTask() {
     }
 }
 
+function tableTitle(title) {
+    document.getElementById("table-title").innerHTML = title;
+}
 
-export { modalControl, displayTask, displayEdit }
+
+export { modalControl, displayTask, displayEdit, tableTitle }
