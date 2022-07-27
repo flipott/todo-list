@@ -6,6 +6,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <script src="main.js" defer></script>
+    <script type="text/javascript" defer>
+        function checkValue(val){
+
+            if (val == "add") {
+                document.getElementById("main-text-category").style.display = "flex";
+                document.getElementById("edit-text-category").style.display = "flex";
+            } else {
+                document.getElementById("main-text-category").style.display = "none";
+                document.getElementById("edit-text-category").style.display = "none";
+            };
+        }
+    </script> 
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -23,10 +35,11 @@
                     <li><a id="this-week" href="#" onclick="return false;">This Week</a></li>
                 </ul>
                 <p class="sidebar-title">Categories</p>
-                <ul class="sidebar-list">
+                <ul class="sidebar-list" id="category-list">
                     <li><a id="work" href="#" onclick="return false;">Work</a></li>
                     <li><a id="personal" href="#" onclick="return false;">Personal</a></li>
                 </ul>
+                <button id="add-cat">Add category...</button>
             </div>
             <div class="table-section">
                 <h1 id="table-title">Viewing All Tasks</h1>
@@ -68,11 +81,13 @@
                 <input type="date" name="due-date" id="due-date">
 
                 <label for="category">Category</label>
-                <select name="category" id="category">
+                <select name="category" id="main-category" onchange="checkValue(this.value);">
                     <option value="personal">Personal</option>
                     <option value="work">Work</option>
-                    <option value="add">Add new category...</option>
+                    <option value="add" id="last-option">Add new category...</option>
                 </select>
+                <input type="text" name="category" id ="main-text-category" style="display:none;">
+
 
                 <button id="modal-submit" type="button">Add item</button>
             </form>
@@ -84,7 +99,7 @@
             <p id="modal-title">Edit item</p>
             <button id="edit-close">x</button> 
         </div>
-        <form id="modal-form">
+        <form id="edit-form">
             <label for="priority">Priority</label>
             <select id="edit-priority" name="priority">
                 <option value="low">Low</option>
@@ -105,11 +120,24 @@
             <select name="category" id="edit-category">
                 <option value="personal">Personal</option>
                 <option value="work">Work</option>
-                <option value="add">Add new category...</option>
+                <option value="add" id="last-edit-option">Add new category...</option>
             </select>
+            <input type="text" name="category" id ="edit-text-category" style="display:none;">
 
             <button id="edit-submit" type="button">Edit item</button>
             <button id="delete-item" type="button">Delete item</button>
+        </form>
+    </div>
+
+    <div class="category-modal">
+        <div class="modal-header">
+            <p id="modal-title">Add category</p>
+            <button id="category-close">x</button> 
+        </div>
+        <form id="category-form">
+            <label for="category">Category Title</label>
+            <input type="text" name="category" id="category-category">
+            <button id="category-submit" type="button">Submit</button>
         </form>
     </div>
 </div>
