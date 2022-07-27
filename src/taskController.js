@@ -77,9 +77,13 @@ const handleTask = (function() {
         return newArr;
     }
 
+    function addCategory(name) {
+        categories.push(name);
+    }
 
 
-    return { addItem, itemFactory, editItem, deleteItem, weeklyFilter, dailyFilter, categoryFilter, itemArray, categories }
+
+    return { addItem, itemFactory, editItem, deleteItem, weeklyFilter, dailyFilter, categoryFilter, itemArray, categories, addCategory }
 })();
 
 
