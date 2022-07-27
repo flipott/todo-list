@@ -1,5 +1,5 @@
 import { ca } from "date-fns/locale";
-import { modalControl, displayTask, displayEdit, tableTitle } from "./displayController";
+import { modalControl, displayTask, displayEdit, tableTitle, displayNewCategory, resetForms } from "./displayController";
 import { handleTask } from "./taskController";
 
 const submitModal = document.getElementById("modal-submit");
@@ -13,8 +13,14 @@ submitModal.addEventListener("click", function() {
     let title = document.getElementById("title").value;
     let description = document.getElementById("description").value;
     let dueDate = document.getElementById("due-date").value;
-    let category = document.getElementById("category").value; 
-
+    let category = document.getElementById("main-category").value;
+    
+    if (category === "add") {
+        category = document.getElementById("main-text-category").value.toLowerCase();
+        displayNewCategory(category);
+        handleTask.addCategory(category);
+    } 
+    
     handleTask.addItem(handleTask.itemFactory(priority, title, description, dueDate, category));
     modalControl.hideModal();
 
@@ -34,8 +40,7 @@ submitModal.addEventListener("click", function() {
         catSection(currentSection);
     }
 
-
-    document.getElementById("modal-form").reset();
+    resetForms();
 });
 
 //Controls edit modal
@@ -56,11 +61,34 @@ document.getElementById("edit-submit").addEventListener("click", function() {
     let newTitle = document.getElementById("edit-title").value;
     let newDescription = document.getElementById("edit-description").value;
     let newDueDate = document.getElementById("edit-date").value;
-    let newCategory = document.getElementById("edit-category").value; 
+    let newCategory = document.getElementById("edit-category").value;
+
+    if (newCategory === "add") {
+        newCategory = document.getElementById("main-text-category").value.toLowerCase();
+        displayNewCategory(newCategory);
+        handleTask.addCategory(newCategory);
+    } 
 
     handleTask.editItem(editIndex, newPriority, newTitle, newDescription, newDueDate, newCategory);
     modalControl.hideEditModal();
-    displayTask(handleTask.itemArray);
+
+    switch(currentSection) {
+        case "viewAll":
+            displayTask(handleTask.itemArray);
+            break;
+        case "today":
+            today();
+            break;
+        case "thisWeek":
+            thisWeek();
+            break;  
+    };
+
+    if (currentSection != "viewAll" && currentSection != "today" && currentSection != "thisWeek") {
+        catSection(currentSection);
+    }
+
+    resetForms();
 })
 
 //Deletes item from array and DOM
@@ -106,3 +134,11 @@ function catSection(selectedCategory) {
     tableTitle("Viewing all " + selectedCategory + " tasks");
     displayTask(categoryArray);
 }
+
+document.getElementById("category-submit").addEventListener("click", function() {
+    const newCategory = document.getElementById("category-category").value.toLowerCase();
+    displayNewCategory(newCategory);
+    handleTask.addCategory(newCategory);
+    modalControl.hideCategoryModal();
+    resetForms();
+})
