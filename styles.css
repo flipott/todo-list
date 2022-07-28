@@ -140,6 +140,22 @@ html, body {
     border-radius: 8px;
 }
 
+.edit-category-modal {
+    margin: 0;
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    display: none;
+    flex-direction: column;
+    background: white;
+    color: black;
+    padding: 0 25px 25px 25px;
+    width: 400px;
+    border-radius: 8px;
+}
+
 .modal-header {
     display: flex;
     justify-content: space-between;
