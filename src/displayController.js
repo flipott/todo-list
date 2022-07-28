@@ -6,7 +6,7 @@ const addCategoryModal = document.getElementById("add-cat")
 const closeModal = document.getElementById("modal-close");
 const closeEditModal = document.getElementById("edit-close");
 const closeCategoryModal = document.getElementById("category-close");
-
+const closeEditCategoryModal = document.getElementById("edit-category-close")
 const mainCategorySelect = document.getElementById("main-category");
 const mainCategoryText = document.getElementById("main-text-category");
 
@@ -28,6 +28,10 @@ let modalControl = (function() {
 
     closeEditModal.addEventListener("click", function() {
         hideEditModal();
+    });
+
+    closeEditCategoryModal.addEventListener("click", function() {
+        hideEditCategoryModal();
     });
 
     addCategoryModal.addEventListener("click", function() {
@@ -62,15 +66,25 @@ let modalControl = (function() {
         document.querySelector(".category-modal").style.display = "none";
     }
 
+    function showEditCategoryModal() {
+        document.querySelector(".edit-category-modal").style.display = "flex";
+    }
+
+    function hideEditCategoryModal() {
+        document.querySelector(".edit-category-modal").style.display = "none";
+    }
+
     function showCategoryModal() {
         hideModal();
         hideEditModal();
         document.querySelector(".category-modal").style.display = "flex";
     }
 
+    displayUpdateCategory();
 
 
-    return { showModal, hideModal, showEditModal, hideEditModal, showCategoryModal, hideCategoryModal }
+
+    return { showModal, hideModal, showEditModal, hideEditModal, showCategoryModal, hideCategoryModal, showEditCategoryModal, hideEditCategoryModal }
 })();
 
 //Fills out page form for editing a to-do item
@@ -93,34 +107,19 @@ function displayEdit(editIndex) {
     let category = handleTask.itemArray[editIndex].category;
     document.getElementById("edit-category").value = category;
 
+    console.log(category);
+    console.log(handleTask.itemArray[editIndex]);
+
 }
 
-//Adds a new category to the sidebar and dropdown menu
-function displayNewCategory(name) {
-    const sidebarList = document.querySelector("#category-list");
-    let newCategory = document.createElement("li");
-    newCategory.innerHTML = '<a id=' + name + ' href="#" onclick="return false;">' + name + '</a>'
-    sidebarList.appendChild(newCategory);
+function displayEditCategory(name) {
+    modalControl.showEditCategoryModal();
+    document.getElementById("edit-category-sidebar").value = name;
+}
 
-    const mainCategoryList = document.querySelector("#main-category");
-    const mainLastOption = document.querySelector("#last-option");
-    const editCategoryList = document.querySelector("#edit-category");
-    const editLastOption = document.querySelector("#last-edit-option");
+function displayEditCategorySubmit(newCategory) {
+    updateCategorySidebar();
 
-    for (let i=0;i<2;i++) {
-        let newOption = document.createElement("option");
-        newOption.value = name;
-        newOption.innerHTML = name;
-
-        if (i==0) {
-            mainCategoryList.insertBefore(newOption, mainLastOption);
-        } else {
-            editCategoryList.insertBefore(newOption, editLastOption);
-        };
-    };
-
-    document.getElementById("main-text-category").style.display = "none";
-    document.getElementById("edit-text-category").style.display = "none";
 }
 
 //Populate tasks on page
@@ -186,5 +185,51 @@ function resetForms() {
     document.getElementById("category-form").reset();
 }
 
+function displayUpdateCategory() {
+    const sidebarList = document.getElementById("category-list")
+    const mainCategoryList = document.querySelector("#main-category");
+    const editCategoryList = document.querySelector("#edit-category");
 
-export { modalControl, displayTask, displayEdit, tableTitle, displayNewCategory, resetForms }
+    sidebarList.innerHTML = '';
+    mainCategoryList.innerHTML = '';
+    editCategoryList.innerHTML = '';
+
+    let mainLastOption = document.createElement("option");
+    mainLastOption.value="add";
+    mainLastOption.id="last-option";
+    mainLastOption.innerText = "Add new category..."
+    mainCategoryList.appendChild(mainLastOption);
+
+    let editLastOption = document.createElement("option");
+    editLastOption.value="add";
+    editLastOption.id="last-option";
+    editLastOption.innerText = "Add new category..."
+    editCategoryList.appendChild(editLastOption);
+
+
+
+    for (let i=0;i<handleTask.categories.length;i++) {
+
+        let currentCat = handleTask.categories[i];
+        let newElement = document.createElement("li");
+        newElement.innerHTML = '<a id="' + currentCat + '"href="#" onclick="return false;">' + currentCat + '</a><button class="remove-cat-btn">✎</button>'
+        sidebarList.appendChild(newElement);
+
+        let newOption = document.createElement("option");
+        newOption.value = currentCat;
+        newOption.innerHTML = currentCat;
+
+        let newEditOption = newOption.cloneNode(true);
+        
+        mainCategoryList.insertBefore(newOption, mainLastOption)
+        editCategoryList.insertBefore(newEditOption, editLastOption);
+
+    }
+
+    document.getElementById("main-text-category").style.display = "none";
+    document.getElementById("edit-text-category").style.display = "none";
+
+}
+
+
+export { modalControl, displayTask, displayEdit, tableTitle, displayUpdateCategory, resetForms, displayEditCategory, displayEditCategorySubmit }
