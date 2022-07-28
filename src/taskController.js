@@ -81,9 +81,30 @@ const handleTask = (function() {
         categories.push(name);
     }
 
+    function editCategory(oldCategory, newCategory) {
+        console.log("turning " + oldCategory + " into " + newCategory);
+        console.log(categories.includes(newCategory));
+
+        if (categories.includes(newCategory) == false) {
+            for (let i=0;i<itemArray.length;i++) {
+                if (itemArray[i].category === oldCategory) {
+                    itemArray[i].category = newCategory;
+                }
+            }
+
+            for (let i=0;i<categories.length;i++) {
+                if (categories[i] === oldCategory) {
+                    categories[i] = newCategory;
+                }
+            }
+        } else {
+            return;
+        }
+    }
 
 
-    return { addItem, itemFactory, editItem, deleteItem, weeklyFilter, dailyFilter, categoryFilter, itemArray, categories, addCategory }
+
+    return { addItem, itemFactory, editItem, deleteItem, weeklyFilter, dailyFilter, categoryFilter, itemArray, categories, addCategory, editCategory }
 })();
 
 
