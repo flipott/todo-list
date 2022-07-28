@@ -1,11 +1,13 @@
 import { ca } from "date-fns/locale";
-import { modalControl, displayTask, displayEdit, tableTitle, displayNewCategory, resetForms } from "./displayController";
+import { modalControl, displayTask, displayEdit, tableTitle, displayUpdateCategory, resetForms, displayEditCategory, displayEditCategorySubmit } from "./displayController";
 import { handleTask } from "./taskController";
 
 const submitModal = document.getElementById("modal-submit");
 let newItem;
 let editIndex;
 let currentSection = "viewAll"
+let oldCategory;
+let newCategory;
 
 //Fire DOM and task events when a new to-do item is submitted
 submitModal.addEventListener("click", function() {
@@ -17,8 +19,8 @@ submitModal.addEventListener("click", function() {
     
     if (category === "add") {
         category = document.getElementById("main-text-category").value.toLowerCase();
-        displayNewCategory(category);
         handleTask.addCategory(category);
+        displayUpdateCategory();
     } 
     
     handleTask.addItem(handleTask.itemFactory(priority, title, description, dueDate, category));
@@ -52,7 +54,11 @@ document.addEventListener("click", function(e) {
         let selectedCategory = e.target.innerText.toLowerCase();
         currentSection = selectedCategory;
         catSection(selectedCategory);
-    };
+    } else if(e.target && e.target.className === "remove-cat-btn") {
+        let editCategory = e.target.parentElement.firstChild.id
+        displayEditCategory(editCategory);
+        oldCategory = editCategory;
+    }
 });
 
 //Edits item in array and DOM
@@ -64,13 +70,38 @@ document.getElementById("edit-submit").addEventListener("click", function() {
     let newCategory = document.getElementById("edit-category").value;
 
     if (newCategory === "add") {
-        newCategory = document.getElementById("main-text-category").value.toLowerCase();
-        displayNewCategory(newCategory);
+        newCategory = document.getElementById("edit-text-category").value.toLowerCase();
         handleTask.addCategory(newCategory);
+        displayUpdateCategory();
     } 
 
     handleTask.editItem(editIndex, newPriority, newTitle, newDescription, newDueDate, newCategory);
     modalControl.hideEditModal();
+
+    switch(currentSection) {
+        case "viewAll":
+            displayTask(handleTask.itemArray);
+            break;
+        case "today":
+            today();
+            break;
+        case "thisWeek":
+            thisWeek();
+            break;  
+    };
+
+    if (currentSection != "viewAll" && currentSection != "today" && currentSection != "thisWeek") {
+        catSection(currentSection);
+    }
+
+    resetForms();
+})
+
+document.getElementById("edit-category-submit").addEventListener("click", function() {
+    newCategory = document.getElementById("edit-category-sidebar").value;
+    handleTask.editCategory(oldCategory, newCategory);
+    displayEditCategorySubmit(oldCategory, newCategory);
+    modalControl.hideEditCategoryModal();
 
     switch(currentSection) {
         case "viewAll":
@@ -137,8 +168,8 @@ function catSection(selectedCategory) {
 
 document.getElementById("category-submit").addEventListener("click", function() {
     const newCategory = document.getElementById("category-category").value.toLowerCase();
-    displayNewCategory(newCategory);
     handleTask.addCategory(newCategory);
+    displayUpdateCategory();
     modalControl.hideCategoryModal();
     resetForms();
 })
