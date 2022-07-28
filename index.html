@@ -36,8 +36,6 @@
                 </ul>
                 <p class="sidebar-title">Categories</p>
                 <ul class="sidebar-list" id="category-list">
-                    <li><a id="work" href="#" onclick="return false;">Work</a></li>
-                    <li><a id="personal" href="#" onclick="return false;">Personal</a></li>
                 </ul>
                 <button id="add-cat">Add category...</button>
             </div>
@@ -82,9 +80,9 @@
 
                 <label for="category">Category</label>
                 <select name="category" id="main-category" onchange="checkValue(this.value);">
-                    <option value="personal">Personal</option>
-                    <option value="work">Work</option>
-                    <option value="add" id="last-option">Add new category...</option>
+                    <!-- <option value="personal">Personal</option>
+                    <option value="work">Work</option> -->
+                    <!-- <option value="add" id="last-option">Add new category...</option> -->
                 </select>
                 <input type="text" name="category" id ="main-text-category" style="display:none;">
 
@@ -117,7 +115,7 @@
             <input type="date" name="due-date" id="edit-date">
 
             <label for="category">Category</label>
-            <select name="category" id="edit-category">
+            <select name="category" id="edit-category" onchange="checkValue(this.value);">
                 <option value="personal">Personal</option>
                 <option value="work">Work</option>
                 <option value="add" id="last-edit-option">Add new category...</option>
@@ -138,6 +136,19 @@
             <label for="category">Category Title</label>
             <input type="text" name="category" id="category-category">
             <button id="category-submit" type="button">Submit</button>
+        </form>
+    </div>
+
+    <div class="edit-category-modal">
+        <div class="modal-header">
+            <p id="modal-title">Edit category</p>
+            <button id="edit-category-close">x</button> 
+        </div>
+        <form id="category-form">
+            <label for="category">Category Title</label>
+            <input type="text" name="category" id="edit-category-sidebar">
+            <button id="edit-category-submit" type="button">Submit</button>
+            <button id="delete-category" type="button">Delete category</button>
         </form>
     </div>
 </div>
