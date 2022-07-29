@@ -3,8 +3,8 @@ const handleTask = (function() {
     let itemArray = [];
     let categories = ['personal', 'work'];
 
-    const itemFactory = (priority, title, description, dueDate, category) => {
-        return { priority, title, description, dueDate, category};
+    const itemFactory = (status, priority, title, description, dueDate, category) => {
+        return { status, priority, title, description, dueDate, category};
     }
 
     function sortArray(array) {
@@ -82,9 +82,6 @@ const handleTask = (function() {
     }
 
     function editCategory(oldCategory, newCategory) {
-        console.log("turning " + oldCategory + " into " + newCategory);
-        console.log(categories.includes(newCategory));
-
         if (categories.includes(newCategory) == false) {
             for (let i=0;i<itemArray.length;i++) {
                 if (itemArray[i].category === oldCategory) {
@@ -102,9 +99,23 @@ const handleTask = (function() {
         }
     }
 
+    function deleteCategory(category) {
+        for (let i=0;i<itemArray.length;i++) {
+            if (itemArray[i].category === category) {
+                itemArray.splice(i);
+            }
+        }
+
+        for (let i=0;i<categories.length;i++) {
+            if (categories[i] === category) {
+                categories.splice(i, 1);
+            }
+        }
+    }
 
 
-    return { addItem, itemFactory, editItem, deleteItem, weeklyFilter, dailyFilter, categoryFilter, itemArray, categories, addCategory, editCategory }
+
+    return { addItem, itemFactory, editItem, deleteItem, weeklyFilter, dailyFilter, categoryFilter, itemArray, categories, addCategory, editCategory, deleteCategory }
 })();
 
 
