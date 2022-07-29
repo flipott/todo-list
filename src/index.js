@@ -16,6 +16,7 @@ submitModal.addEventListener("click", function() {
     let description = document.getElementById("description").value;
     let dueDate = document.getElementById("due-date").value;
     let category = document.getElementById("main-category").value;
+    let status = false;
     
     if (category === "add") {
         category = document.getElementById("main-text-category").value.toLowerCase();
@@ -23,12 +24,12 @@ submitModal.addEventListener("click", function() {
         displayUpdateCategory();
     } 
     
-    handleTask.addItem(handleTask.itemFactory(priority, title, description, dueDate, category));
+    handleTask.addItem(handleTask.itemFactory(status, priority, title, description, dueDate, category));
     modalControl.hideModal();
 
     switch(currentSection) {
         case "viewAll":
-            displayTask(handleTask.itemArray);
+            viewAll();
             break;
         case "today":
             today();
@@ -55,9 +56,11 @@ document.addEventListener("click", function(e) {
         currentSection = selectedCategory;
         catSection(selectedCategory);
     } else if(e.target && e.target.className === "remove-cat-btn") {
-        let editCategory = e.target.parentElement.firstChild.id
+        let categoryIndex = e.target.getAttribute("data-set");
+        let editCategory = handleTask.categories[categoryIndex];
         displayEditCategory(editCategory);
         oldCategory = editCategory;
+        currentSection = oldCategory;
     }
 });
 
@@ -99,13 +102,14 @@ document.getElementById("edit-submit").addEventListener("click", function() {
 
 document.getElementById("edit-category-submit").addEventListener("click", function() {
     newCategory = document.getElementById("edit-category-sidebar").value;
+    currentSection = newCategory;
     handleTask.editCategory(oldCategory, newCategory);
-    displayEditCategorySubmit(oldCategory, newCategory);
     modalControl.hideEditCategoryModal();
+    displayUpdateCategory();
 
     switch(currentSection) {
         case "viewAll":
-            displayTask(handleTask.itemArray);
+            viewAll();
             break;
         case "today":
             today();
@@ -146,6 +150,12 @@ document.getElementById("this-week").addEventListener("click", function() {
     thisWeek();
 });
 
+function viewAll() {
+    tableTitle("Viewing All Tasks");
+    currentSection = "viewAll";
+    displayTask(handleTask.itemArray);
+}
+
 function today() {
     currentSection = "today";
     let dailyArray = handleTask.dailyFilter();
@@ -169,7 +179,30 @@ function catSection(selectedCategory) {
 document.getElementById("category-submit").addEventListener("click", function() {
     const newCategory = document.getElementById("category-category").value.toLowerCase();
     handleTask.addCategory(newCategory);
+    catSection(newCategory);
     displayUpdateCategory();
     modalControl.hideCategoryModal();
     resetForms();
 })
+
+document.getElementById("delete-category").addEventListener("click", function() {
+    modalControl.hideEditCategoryModal();
+
+    document.getElementById("delete-category-name").innerText = oldCategory;
+    document.querySelector(".delete-category-warning").style.display = "flex"
+    
+
+    document.getElementById("confirm-delete").addEventListener("click", function() {
+        handleTask.deleteCategory(oldCategory);
+        document.querySelector(".delete-category-warning").style.display = "none";
+        displayUpdateCategory();
+        viewAll();
+    });
+
+    document.getElementById("cancel-delete").addEventListener("click", function() {
+        document.querySelector(".delete-category-warning").style.display = "none";
+        modalControl.showEditCategoryModal();
+
+    });
+
+});
