@@ -13,11 +13,6 @@ const mainCategoryText = document.getElementById("main-text-category");
 //Show or hide modals depending on button click
 let modalControl = (function() {
 
-    if (mainCategorySelect.value === "Add new category...") {
-        console.log("Wow!");
-    }
-
-
     addModal.addEventListener("click", function(){
         showModal();
     });
@@ -107,9 +102,6 @@ function displayEdit(editIndex) {
     let category = handleTask.itemArray[editIndex].category;
     document.getElementById("edit-category").value = category;
 
-    console.log(category);
-    console.log(handleTask.itemArray[editIndex]);
-
 }
 
 function displayEditCategory(name) {
@@ -118,7 +110,6 @@ function displayEditCategory(name) {
 }
 
 function displayEditCategorySubmit(newCategory) {
-    updateCategorySidebar();
 
 }
 
@@ -129,8 +120,6 @@ function displayTask(currentArray) {
     while (document.querySelector("tbody").childNodes.length > 1) {
         document.querySelector("tbody").removeChild(document.querySelector("tbody").lastChild);
     }
-
-    // let currentArray = handleTask.itemArray;
     
     //Display new data
     for (let i=0;i<currentArray.length;i++) {
@@ -139,17 +128,64 @@ function displayTask(currentArray) {
         let description = currentArray[i].description;
         let dueDate = currentArray[i].dueDate;
         let category = currentArray[i].category;
+        let status = currentArray[i].status;
 
         let newRow = document.createElement("tr");
         newRow.setAttribute("data-set", i);
 
         let newInputData = document.createElement("td");
-        newInputData.innerHTML = '<input type="checkbox" value="test" checked="unchecked">'
+
+        // let btnWrapper = document.createElement("button");
+        // btnWrapper.setAttribute("class", "status-btn");
+    
+
+        let statusSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        statusSvg.setAttribute("viewBox", "0 0 12 12");
+        statusSvg.setAttribute("width", "20px");
+        statusSvg.setAttribute("height", "20px");
+        statusSvg.setAttribute("overflow", "visible");
+
+        let statusCircle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        statusCircle.setAttribute("cx", "6");
+        statusCircle.setAttribute("cy", "6");
+        statusCircle.setAttribute("r", "6");
+        statusCircle.setAttribute("fill", "none");
+        statusCircle.setAttribute("stroke", "red");
+
+        statusSvg.appendChild(statusCircle);
+        // btnWrapper.appendChild(statusSvg);
+        // newInputData.appendChild(btnWrapper);
+        newInputData.appendChild(statusSvg);
         newRow.appendChild(newInputData);
 
+        
+
         let newPriorityData = document.createElement("td");
-        newPriorityData.innerHTML = '<p class=' + priority + '>⚫</p>'
+        let svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        svg.setAttribute("viewBox", "0 0 12 12");
+        svg.setAttribute("width", "20px");
+        svg.setAttribute("height", "20px");
+        svg.setAttribute("overflow", "visible");
+
+        let circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        circle.setAttribute("cx", "6");
+        circle.setAttribute("cy", "6");
+        circle.setAttribute("r", "6");
+        circle.setAttribute("fill-rule", "evenodd");
+
+        if (priority === "low") {
+            circle.setAttribute("fill", "#638f65");
+        } else if (priority === "medium") {
+            circle.setAttribute("fill", "#b0ba65");
+        } else {
+            circle.setAttribute("fill", "#ad6749");
+        }
+
+        svg.appendChild(circle);
+        newPriorityData.appendChild(svg);
         newRow.appendChild(newPriorityData);
+
+
 
         let newTitleData = document.createElement("td");
         newTitleData.innerHTML = title;
@@ -212,7 +248,7 @@ function displayUpdateCategory() {
 
         let currentCat = handleTask.categories[i];
         let newElement = document.createElement("li");
-        newElement.innerHTML = '<a id="' + currentCat + '"href="#" onclick="return false;">' + currentCat + '</a><button class="remove-cat-btn">✎</button>'
+        newElement.innerHTML = '<a id="' + currentCat + '"href="#" onclick="return false;">' + currentCat + '</a><button class="remove-cat-btn" data-set = ' + i + '>✎</button>'
         sidebarList.appendChild(newElement);
 
         let newOption = document.createElement("option");
