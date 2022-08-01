@@ -7,8 +7,6 @@ const closeModal = document.getElementById("modal-close");
 const closeEditModal = document.getElementById("edit-close");
 const closeCategoryModal = document.getElementById("category-close");
 const closeEditCategoryModal = document.getElementById("edit-category-close")
-const mainCategorySelect = document.getElementById("main-category");
-const mainCategoryText = document.getElementById("main-text-category");
 
 //Show or hide modals depending on button click
 let modalControl = (function() {
@@ -129,36 +127,36 @@ function displayTask(currentArray) {
         let dueDate = currentArray[i].dueDate;
         let category = currentArray[i].category;
         let status = currentArray[i].status;
+        let originalArrayIndex = currentArray[i].dataSet;
 
         let newRow = document.createElement("tr");
         newRow.setAttribute("data-set", i);
+        newRow.setAttribute("original-index", originalArrayIndex);
 
         let newInputData = document.createElement("td");
 
-        // let btnWrapper = document.createElement("button");
-        // btnWrapper.setAttribute("class", "status-btn");
-    
+        let linkWrapper = document.createElement("a");
+        linkWrapper.setAttribute("class", "status-change");
+        linkWrapper.setAttribute("href", "#");
+        linkWrapper.setAttribute("onclick", "return false;");
 
-        let statusSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-        statusSvg.setAttribute("viewBox", "0 0 12 12");
-        statusSvg.setAttribute("width", "20px");
-        statusSvg.setAttribute("height", "20px");
-        statusSvg.setAttribute("overflow", "visible");
+        let svgWrapper = document.createElement("img");
 
-        let statusCircle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-        statusCircle.setAttribute("cx", "6");
-        statusCircle.setAttribute("cy", "6");
-        statusCircle.setAttribute("r", "6");
-        statusCircle.setAttribute("fill", "none");
-        statusCircle.setAttribute("stroke", "red");
+        if (status === true) {
+            svgWrapper.setAttribute("src", "../src/images/checked.svg");
+            svgWrapper.setAttribute("width", "20px");
+            svgWrapper.setAttribute("height", "20px");
+            svgWrapper.setAttribute("class", "checked");
+        } else {
+            svgWrapper.setAttribute("src", "../src/images/unchecked.svg");
+            svgWrapper.setAttribute("width", "20px");
+            svgWrapper.setAttribute("height", "20px");
+            svgWrapper.setAttribute("class", "unchecked");
+        }
 
-        statusSvg.appendChild(statusCircle);
-        // btnWrapper.appendChild(statusSvg);
-        // newInputData.appendChild(btnWrapper);
-        newInputData.appendChild(statusSvg);
+        linkWrapper.appendChild(svgWrapper);
+        newInputData.appendChild(linkWrapper);
         newRow.appendChild(newInputData);
-
-        
 
         let newPriorityData = document.createElement("td");
         let svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
@@ -184,8 +182,6 @@ function displayTask(currentArray) {
         svg.appendChild(circle);
         newPriorityData.appendChild(svg);
         newRow.appendChild(newPriorityData);
-
-
 
         let newTitleData = document.createElement("td");
         newTitleData.innerHTML = title;
