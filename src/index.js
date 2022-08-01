@@ -8,6 +8,7 @@ let editIndex;
 let currentSection = "viewAll"
 let oldCategory;
 let newCategory;
+let statusIndex;
 
 //Fire DOM and task events when a new to-do item is submitted
 submitModal.addEventListener("click", function() {
@@ -26,32 +27,15 @@ submitModal.addEventListener("click", function() {
     
     handleTask.addItem(handleTask.itemFactory(status, priority, title, description, dueDate, category));
     modalControl.hideModal();
-
-    switch(currentSection) {
-        case "viewAll":
-            viewAll();
-            break;
-        case "today":
-            today();
-            break;
-        case "thisWeek":
-            thisWeek();
-            break;  
-    };
-
-    if (currentSection != "viewAll" && currentSection != "today" && currentSection != "thisWeek") {
-        catSection(currentSection);
-    }
-
-    resetForms();
+    sectionSwitcher();
 });
 
 //Controls edit modal
 document.addEventListener("click", function(e) {
     if(e.target && e.target.className === "edit-btn") {
-        editIndex = e.target.parentElement.parentElement.getAttribute("data-set")
+        editIndex = e.target.parentElement.parentElement.getAttribute("original-index")
         displayEdit(editIndex);
-    } else if(handleTask.categories.includes(e.target.innerText.toLowerCase()) && e.target.tagName == "A") {
+    } else if(handleTask.categories.includes(e.target.id) && e.target.tagName == "A") {
         let selectedCategory = e.target.innerText.toLowerCase();
         currentSection = selectedCategory;
         catSection(selectedCategory);
@@ -61,6 +45,12 @@ document.addEventListener("click", function(e) {
         displayEditCategory(editCategory);
         oldCategory = editCategory;
         currentSection = oldCategory;
+    } else if(e.target.parentElement.className === "status-change") {
+        statusIndex = e.target.parentElement.parentElement.parentElement.getAttribute("original-index");
+        console.log(statusIndex);
+        handleTask.updateStatus(statusIndex);
+        sectionSwitcher();
+        console.log(handleTask.itemArray);
     }
 });
 
@@ -80,25 +70,9 @@ document.getElementById("edit-submit").addEventListener("click", function() {
 
     handleTask.editItem(editIndex, newPriority, newTitle, newDescription, newDueDate, newCategory);
     modalControl.hideEditModal();
+    sectionSwitcher();
 
-    switch(currentSection) {
-        case "viewAll":
-            displayTask(handleTask.itemArray);
-            break;
-        case "today":
-            today();
-            break;
-        case "thisWeek":
-            thisWeek();
-            break;  
-    };
-
-    if (currentSection != "viewAll" && currentSection != "today" && currentSection != "thisWeek") {
-        catSection(currentSection);
-    }
-
-    resetForms();
-})
+});
 
 document.getElementById("edit-category-submit").addEventListener("click", function() {
     newCategory = document.getElementById("edit-category-sidebar").value;
@@ -106,24 +80,8 @@ document.getElementById("edit-category-submit").addEventListener("click", functi
     handleTask.editCategory(oldCategory, newCategory);
     modalControl.hideEditCategoryModal();
     displayUpdateCategory();
+    sectionSwitcher();
 
-    switch(currentSection) {
-        case "viewAll":
-            viewAll();
-            break;
-        case "today":
-            today();
-            break;
-        case "thisWeek":
-            thisWeek();
-            break;  
-    };
-
-    if (currentSection != "viewAll" && currentSection != "today" && currentSection != "thisWeek") {
-        catSection(currentSection);
-    }
-
-    resetForms();
 })
 
 //Deletes item from array and DOM
@@ -135,9 +93,7 @@ document.getElementById("delete-item").addEventListener("click", function() {
 
 //Displays all tasks
 document.getElementById("view-all").addEventListener("click", function() {
-    tableTitle("Viewing All Tasks");
-    currentSection = "viewAll";
-    displayTask(handleTask.itemArray);
+    viewAll();
 });
 
 //Today-only task filter
@@ -150,10 +106,15 @@ document.getElementById("this-week").addEventListener("click", function() {
     thisWeek();
 });
 
+document.getElementById("completed-tasks").addEventListener("click", function() {
+    completedTasks();
+});
+
 function viewAll() {
     tableTitle("Viewing All Tasks");
+    let currentArray = handleTask.allCurrentTasks();
+    displayTask(currentArray);
     currentSection = "viewAll";
-    displayTask(handleTask.itemArray);
 }
 
 function today() {
@@ -170,7 +131,16 @@ function thisWeek() {
     tableTitle("Viewing This Week's Tasks");
 }
 
+function completedTasks() {
+    currentSection = "completedTasks";
+    let completedArray = handleTask.completedFilter();
+    console.log(completedArray);
+    displayTask(completedArray);
+    tableTitle("Viewing Completed Tasks");
+}
+
 function catSection(selectedCategory) {
+    currentSection = selectedCategory;
     let categoryArray = handleTask.categoryFilter(selectedCategory);
     tableTitle("Viewing all " + selectedCategory + " tasks");
     displayTask(categoryArray);
@@ -204,5 +174,27 @@ document.getElementById("delete-category").addEventListener("click", function() 
         modalControl.showEditCategoryModal();
 
     });
-
 });
+
+function sectionSwitcher() {
+    switch(currentSection) {
+        case "viewAll":
+            viewAll();
+            break;
+        case "today":
+            today();
+            break;
+        case "thisWeek":
+            thisWeek();
+            break;  
+        case "completedTasks":
+            completedTasks();
+            break;
+    };
+
+    if (currentSection != "viewAll" && currentSection != "today" && currentSection != "thisWeek" && currentSection != "completedTasks") {
+        catSection(currentSection);
+    }
+
+    resetForms();
+}
