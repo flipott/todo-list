@@ -14,7 +14,6 @@ const handleTask = (function() {
     function addItem(newItem) {
         itemArray.push(newItem);
         sortArray(itemArray);
-        console.log(itemArray);
     }
 
     function editItem(index, priority, title, description, dueDate, category) {
@@ -22,9 +21,8 @@ const handleTask = (function() {
         itemArray[index].title = title;
         itemArray[index].description = description;
         itemArray[index].dueDate = dueDate;
-        itemArray[index].category = category;
-
-        console.log(itemArray);
+        itemArray[index].category = category; 
+        sortArray(itemArray);
     }
 
     function deleteItem(index) {
@@ -42,10 +40,25 @@ const handleTask = (function() {
         let newArr = [];
 
         for (let i=0;i<itemArray.length;i++) {
-            if (itemArray[i].dueDate >= currentDate && itemArray[i].dueDate <= nextWeekDate) {
-                newArr.push(itemArray[i]);
+            if (itemArray[i].dueDate >= currentDate && itemArray[i].dueDate <= nextWeekDate && itemArray[i].status === false) {
+                let newObj = itemArray[i];
+                newObj.dataSet = i;
+                newArr.push(newObj);
             };
         };
+
+        return newArr;
+    }
+
+    function allCurrentTasks() {
+        let newArr = [];
+        for (let i=0;i<itemArray.length;i++) {
+            if (itemArray[i].status === false) {
+                let newObj = itemArray[i];
+                newObj.dataSet = i;
+                newArr.push(newObj);
+            }
+        }
 
         return newArr;
     }
@@ -57,8 +70,10 @@ const handleTask = (function() {
         let newArr = [];
 
         for (let i=0;i<itemArray.length;i++) {
-            if (itemArray[i].dueDate == currentDate) {
-                newArr.push(itemArray[i]);
+            if (itemArray[i].dueDate == currentDate && itemArray[i].status === false) {
+                let newObj = itemArray[i];
+                newObj.dataSet = i;
+                newArr.push(newObj);
             };
         };
 
@@ -69,11 +84,27 @@ const handleTask = (function() {
         let newArr = [];
 
         for(let i=0;i<itemArray.length;i++) {
-            if (itemArray[i].category == selectedCategory) {
-                newArr.push(itemArray[i]);
+            if (itemArray[i].category == selectedCategory && itemArray[i].status === false) {
+                let newObj = itemArray[i];
+                newObj.dataSet = i;
+                newArr.push(newObj);
             };
         };
         
+        return newArr;
+    }
+
+    function completedFilter() {
+        let newArr = [];
+
+        for(let i=0;i<itemArray.length;i++) {
+            if (itemArray[i].status === true) {
+                let newObj = itemArray[i];
+                newObj.dataSet = i;
+                newArr.push(newObj);
+            };
+        };
+
         return newArr;
     }
 
@@ -113,9 +144,17 @@ const handleTask = (function() {
         }
     }
 
+    function updateStatus(statusIndex) {
+        if (itemArray[statusIndex].status === false) {
+            return itemArray[statusIndex].status = true;
+        } else {
+            return itemArray[statusIndex].status = false;
+        };0
+    }
 
 
-    return { addItem, itemFactory, editItem, deleteItem, weeklyFilter, dailyFilter, categoryFilter, itemArray, categories, addCategory, editCategory, deleteCategory }
+
+    return { allCurrentTasks, updateStatus, completedFilter, addItem, itemFactory, editItem, deleteItem, weeklyFilter, dailyFilter, categoryFilter, itemArray, categories, addCategory, editCategory, deleteCategory }
 })();
 
 
