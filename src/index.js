@@ -1,8 +1,8 @@
-import { ca } from "date-fns/locale";
-import { modalControl, displayTask, displayEdit, tableTitle, displayUpdateCategory, resetForms, displayEditCategory, displayEditCategorySubmit } from "./displayController";
+import { displayController } from "./displayController";
 import { handleTask } from "./taskController";
 
 const submitModal = document.getElementById("modal-submit");
+const addBtn = document.getElementById("add-item");
 let newItem;
 let editIndex;
 let currentSection = "viewAll"
@@ -12,29 +12,68 @@ let statusIndex;
 
 //Fire DOM and task events when a new to-do item is submitted
 submitModal.addEventListener("click", function() {
-    let priority = document.getElementById("priority").value;
-    let title = document.getElementById("title").value;
-    let description = document.getElementById("description").value;
-    let dueDate = document.getElementById("due-date").value;
-    let category = document.getElementById("main-category").value;
-    let status = false;
-    
-    if (category === "add") {
-        category = document.getElementById("main-text-category").value.toLowerCase();
-        handleTask.addCategory(category);
-        displayUpdateCategory();
-    } 
-    
-    handleTask.addItem(handleTask.itemFactory(status, priority, title, description, dueDate, category));
-    modalControl.hideModal();
-    sectionSwitcher();
+
+    if (formValidate("submitModal")) {
+        let priority = document.getElementById("priority").value;
+        let title = document.getElementById("title").value;
+        let description = document.getElementById("description").value;
+        let dueDate = document.getElementById("due-date").value;
+        let category = document.getElementById("main-category").value;
+        let status = false;
+        
+        if (category === "add") {
+            category = document.getElementById("main-text-category").value.toLowerCase();
+            handleTask.addCategory(category);
+            displayController.displayUpdateCategory();
+        } 
+        
+        handleTask.addItem(handleTask.itemFactory(status, priority, title, description, dueDate, category));
+        displayController.modalControl.hideModal();
+        sectionSwitcher(); 
+    }
 });
+
+function formValidate(modal) {
+    if (modal === "submitModal") {
+        if (document.getElementById("modal-form").checkValidity()) {
+            if ((document.getElementById("main-category").value != "" && document.getElementById("main-text-category").style.display === "none") || document.getElementById("main-text-category").value != "") {
+                return true;
+            }
+        } else {
+            document.getElementById("modal-form").reportValidity()
+            return false;
+        }
+    } else if (modal === "editModal") {
+        if (document.getElementById("edit-form").checkValidity()) {
+            if ((document.getElementById("edit-category").value != "" && document.getElementById("edit-text-category").style.display === "none") || document.getElementById("edit-text-category").value != "") {
+                return true;
+            }
+        } else {
+            document.getElementById("edit-form").reportValidity()
+            return false;
+        }
+    } else if (modal === "editCategoryModal") {
+        if (document.getElementById("edit-category-form").checkValidity()) {
+            return true;
+        } else {
+            document.getElementById("edit-category-form").reportValidity()
+            return false;
+        };
+    } else if (modal === "categoryModal") {
+        if (document.getElementById("category-form").checkValidity()) {
+            return true;
+        } else {
+            document.getElementById("category-form").reportValidity()
+            return false;
+        };
+    }
+}
 
 //Controls edit modal
 document.addEventListener("click", function(e) {
     if(e.target && e.target.className === "edit-btn") {
         editIndex = e.target.parentElement.parentElement.getAttribute("original-index")
-        displayEdit(editIndex);
+        displayController.displayEdit(editIndex);
     } else if(handleTask.categories.includes(e.target.id) && e.target.tagName == "A") {
         let selectedCategory = e.target.innerText.toLowerCase();
         currentSection = selectedCategory;
@@ -42,53 +81,53 @@ document.addEventListener("click", function(e) {
     } else if(e.target && e.target.className === "remove-cat-btn") {
         let categoryIndex = e.target.getAttribute("data-set");
         let editCategory = handleTask.categories[categoryIndex];
-        displayEditCategory(editCategory);
+        displayController.displayEditCategory(editCategory);
         oldCategory = editCategory;
         currentSection = oldCategory;
     } else if(e.target.parentElement.className === "status-change") {
         statusIndex = e.target.parentElement.parentElement.parentElement.getAttribute("original-index");
-        console.log(statusIndex);
         handleTask.updateStatus(statusIndex);
         sectionSwitcher();
-        console.log(handleTask.itemArray);
     }
 });
 
 //Edits item in array and DOM
 document.getElementById("edit-submit").addEventListener("click", function() {
-    let newPriority = document.getElementById("edit-priority").value;
-    let newTitle = document.getElementById("edit-title").value;
-    let newDescription = document.getElementById("edit-description").value;
-    let newDueDate = document.getElementById("edit-date").value;
-    let newCategory = document.getElementById("edit-category").value;
+    if (formValidate("editModal")) {
+        let newPriority = document.getElementById("edit-priority").value;
+        let newTitle = document.getElementById("edit-title").value;
+        let newDescription = document.getElementById("edit-description").value;
+        let newDueDate = document.getElementById("edit-date").value;
+        let newCategory = document.getElementById("edit-category").value;
 
-    if (newCategory === "add") {
-        newCategory = document.getElementById("edit-text-category").value.toLowerCase();
-        handleTask.addCategory(newCategory);
-        displayUpdateCategory();
-    } 
+        if (newCategory === "add") {
+            newCategory = document.getElementById("edit-text-category").value.toLowerCase();
+            handleTask.addCategory(newCategory);
+            displayController.displayUpdateCategory();
+        } 
 
-    handleTask.editItem(editIndex, newPriority, newTitle, newDescription, newDueDate, newCategory);
-    modalControl.hideEditModal();
-    sectionSwitcher();
-
+        handleTask.editItem(editIndex, newPriority, newTitle, newDescription, newDueDate, newCategory);
+        displayController.modalControl.hideEditModal();
+        sectionSwitcher();
+    }
 });
 
 document.getElementById("edit-category-submit").addEventListener("click", function() {
-    newCategory = document.getElementById("edit-category-sidebar").value;
-    currentSection = newCategory;
-    handleTask.editCategory(oldCategory, newCategory);
-    modalControl.hideEditCategoryModal();
-    displayUpdateCategory();
-    sectionSwitcher();
-
+    if (formValidate("editCategoryModal")) {
+        newCategory = document.getElementById("edit-category-sidebar").value;
+        currentSection = newCategory;
+        handleTask.editCategory(oldCategory, newCategory);
+        displayController.modalControl.hideEditCategoryModal();
+        displayController.displayUpdateCategory();
+        sectionSwitcher();
+    };
 })
 
 //Deletes item from array and DOM
 document.getElementById("delete-item").addEventListener("click", function() {
     handleTask.deleteItem(editIndex);
-    modalControl.hideEditModal();
-    displayTask(handleTask.itemArray);
+    displayController.modalControl.hideEditModal();
+    displayController.displayTask(handleTask.itemArray);
 });
 
 //Displays all tasks
@@ -111,52 +150,60 @@ document.getElementById("completed-tasks").addEventListener("click", function() 
 });
 
 function viewAll() {
-    tableTitle("Viewing All Tasks");
+    displayController.tableTitle("Viewing All Tasks");
     let currentArray = handleTask.allCurrentTasks();
-    displayTask(currentArray);
+    displayController.displayTask(currentArray);
     currentSection = "viewAll";
+    addBtn.style.display = "flex";
+
 }
 
 function today() {
     currentSection = "today";
     let dailyArray = handleTask.dailyFilter();
-    displayTask(dailyArray);
-    tableTitle("Viewing Today's Tasks");
+    displayController.displayTask(dailyArray);
+    displayController.tableTitle("Viewing Today's Tasks");
+    addBtn.style.display = "flex";
+
 }
 
 function thisWeek() {
     currentSection = "thisWeek";
     let weeklyArray = handleTask.weeklyFilter();
-    displayTask(weeklyArray);
-    tableTitle("Viewing This Week's Tasks");
+    displayController.displayTask(weeklyArray);
+    displayController.tableTitle("Viewing This Week's Tasks");
+    addBtn.style.display = "flex";
+
 }
 
 function completedTasks() {
     currentSection = "completedTasks";
     let completedArray = handleTask.completedFilter();
-    console.log(completedArray);
-    displayTask(completedArray);
-    tableTitle("Viewing Completed Tasks");
+    displayController.displayTask(completedArray);
+    displayController.tableTitle("Viewing Completed Tasks");
+    addBtn.style.display = "none";
 }
 
 function catSection(selectedCategory) {
     currentSection = selectedCategory;
     let categoryArray = handleTask.categoryFilter(selectedCategory);
-    tableTitle("Viewing all " + selectedCategory + " tasks");
-    displayTask(categoryArray);
+    displayController.tableTitle("Viewing all " + selectedCategory + " tasks");
+    displayController.displayTask(categoryArray);
 }
 
 document.getElementById("category-submit").addEventListener("click", function() {
-    const newCategory = document.getElementById("category-category").value.toLowerCase();
-    handleTask.addCategory(newCategory);
-    catSection(newCategory);
-    displayUpdateCategory();
-    modalControl.hideCategoryModal();
-    resetForms();
+    if (formValidate("categoryModal")) {
+        const newCategory = document.getElementById("category-category").value.toLowerCase();
+        handleTask.addCategory(newCategory);
+        catSection(newCategory);
+        displayController.displayUpdateCategory();
+        displayController.modalControl.hideCategoryModal();
+        displayController.resetForms();
+    };
 })
 
 document.getElementById("delete-category").addEventListener("click", function() {
-    modalControl.hideEditCategoryModal();
+    displayController.modalControl.hideEditCategoryModal();
 
     document.getElementById("delete-category-name").innerText = oldCategory;
     document.querySelector(".delete-category-warning").style.display = "flex"
@@ -165,13 +212,13 @@ document.getElementById("delete-category").addEventListener("click", function() 
     document.getElementById("confirm-delete").addEventListener("click", function() {
         handleTask.deleteCategory(oldCategory);
         document.querySelector(".delete-category-warning").style.display = "none";
-        displayUpdateCategory();
+        displayController.displayUpdateCategory();
         viewAll();
     });
 
     document.getElementById("cancel-delete").addEventListener("click", function() {
         document.querySelector(".delete-category-warning").style.display = "none";
-        modalControl.showEditCategoryModal();
+        displayController.modalControl.showEditCategoryModal();
 
     });
 });
@@ -196,5 +243,5 @@ function sectionSwitcher() {
         catSection(currentSection);
     }
 
-    resetForms();
+    displayController.resetForms();
 }
