@@ -94,7 +94,7 @@ const handleTask = (function() {
         let newArr = [];
 
         for(let i=0;i<itemArray.length;i++) {
-            if (itemArray[i].category == selectedCategory && itemArray[i].status === false) {
+            if (itemArray[i].category.toLowerCase() == selectedCategory.toLowerCase() && itemArray[i].status === false) {
                 let newObj = itemArray[i];
                 newObj.dataSet = i;
                 newArr.push(newObj);
