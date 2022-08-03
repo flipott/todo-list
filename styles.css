@@ -1,19 +1,19 @@
 :root {
-    --bright-navy-blue: #3e78b2ff;
-    --cobalt-blue: #004ba8ff;
+    --amethyst: #9067C6;
+    --middle-blue-purple: #8D86C9;
     --davys-grey: #4a525aff;
     --raisin-black: #24272bff;
     --rich-black-fogra-39: #07070aff;
 
     font-family: sans-serif;
-    font-family: 'Gochi Hand', cursive;
+    font-family: 'Archivo Black', sans-serif;
     font-family: 'Roboto Condensed', sans-serif;
 }
 
 html, body {
     background: var(--raisin-black);
     color: white;
-    height: 100vh;
+    height: 100%;
     width: 100%;
     margin: 0;
     text-transform: capitalize;
@@ -25,14 +25,45 @@ html, body {
     height: 100%
 }
 
+table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px white solid;
+}
+
+tr th:nth-child(1) {
+    width: 5%;
+}
+
+.table-top {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+#add-item {
+    flex: 1;
+    align-self: flex-start;
+    margin-bottom: 5px;
+}
+
+button {
+    border: none;
+    border-radius: 3px;
+    padding: 4px 10px;
+}
+
+
+.table-top::after{content: ''; flex: 1}
+
 .header {
-    background: var(--cobalt-blue);
-    font-size: 5rem;
-    height: 10%;
+    background: var(--middle-blue-purple);
+    font-size: 3.2rem;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-family: 'Gochi Hand', cursive;
+    font-family: 'Archivo Black', sans-serif;
+    min-height: 90px;
 }
 
 .main-content {
@@ -42,10 +73,11 @@ html, body {
 }
 
 .sidebar {
-    background: var(--bright-navy-blue);
+    background: var(--amethyst);
     display: flex;
     flex-direction: column;
     width: 25%;
+    min-width: fit-content;
     align-items: center;
     text-align: center;
     padding-top: 25px;
@@ -68,11 +100,11 @@ html, body {
 
 
 .sidebar-title {
-    font-size: 2.5rem;
+    font-size: 2rem;
     margin: 0;
     border-top: solid 2px white;
     border-bottom: solid 2px white;
-    font-family: 'Gochi Hand', cursive;
+    font-family: 'Archivo Black', sans-serif;
 }
 
 .sidebar ul li {
@@ -91,9 +123,6 @@ html, body {
     padding: 0 0 25px 0;
 }
 
-#add-item {
-    width: fit-content;
-}
 
 .modal {
     margin: 0;
@@ -127,6 +156,21 @@ html, body {
     border-radius: 8px;
 }
 
+#category-list li {
+    display: flex;
+    gap: 15px;
+    justify-content: space-between;
+}
+
+#category-list {
+    margin-bottom: 0;
+    padding-bottom: 10px;
+}
+
+#category-list button, table button {
+    padding: 2px 4px;
+}
+
 .category-modal {
     margin: 0;
     position: absolute;
@@ -141,6 +185,10 @@ html, body {
     padding: 0 25px 25px 25px;
     width: 400px;
     border-radius: 8px;
+}
+
+form button {
+    margin-bottom: 5px;
 }
 
 .edit-category-modal {
@@ -176,6 +224,11 @@ html, body {
     text-align: center;
 }
 
+.delete-category-warning .modal-header {
+    display: flex;
+    flex-direction: column;
+}
+
 .modal-header {
     display: flex;
     justify-content: space-between;
@@ -187,7 +240,7 @@ html, body {
     height: fit-content;
 }
 
-#modal-form, #edit-form, #category-form {
+#modal-form, #edit-form, #category-form, #edit-category-form {
     display: flex;
     flex-direction: column;
 }
@@ -196,11 +249,50 @@ input, select {
     margin-bottom: 15px;
 }
 
-#modal-submit {
-    width: fit-content;
+#modal-submit, #edit-submit, #category-submit, #edit-category-submit, #delete-category, #delete-item {
+    width: 150px;
     align-self: center;
 }
 
 #modal-title {
     font-weight: bold;
+}
+
+#table-title {
+    margin-bottom: 0;
+}
+
+@media (max-width: 850px) {
+
+    .main-content {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        flex-direction: row;
+        width: 100%;
+        height: fit-content;
+        padding-left: 50px;
+        padding-right: 50px;
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        font-size: 1rem;
+        padding-top: 0;
+        padding-bottom: 0;
+        margin-top: 0;
+        margin-bottom: 0;
+    
+    }
+    .table-section {
+        width: 100%;
+        height: 100%;
+        padding-left: 50px;
+        padding-right: 50px;
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+    
+    }
+
 }
