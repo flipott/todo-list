@@ -21,14 +21,14 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Gochi+Hand&family=Roboto+Condensed:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap" rel="stylesheet"> 
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Roboto+Condensed:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap" rel="stylesheet"> 
 </head>
 <body>
     <div class="container">
         <div class="header">To-Do List</div>
         <div class="main-content">
             <div class="sidebar">
-                <p class="sidebar-title">Home</p>
+                <p class="sidebar-title">Filter</p>
                 <ul class="sidebar-list">
                     <li><a id="view-all" href="#" onclick="return false;">View All</a></li>
                     <li><a id="today" href="#" onclick="return false;">Today</a></li>
@@ -41,8 +41,10 @@
                 <button id="add-cat">Add category...</button>
             </div>
             <div class="table-section">
-                <h1 id="table-title">Viewing All Tasks</h1>
-                <button id="add-item">Add item</button>
+                <div class="table-top">
+                    <h1 id="table-title">Viewing All Tasks</h1>
+                    <button id="add-item">Add item</button>
+                </div>
                 <table id="main-table">
                     <tr>
                         <th>Status</th>
@@ -127,7 +129,7 @@
         </div>
         <form id="category-form">
             <label for="category">Category Title</label>
-            <input type="text" name="category" id="category-category" minlength="3" required>
+            <input type="text" name="category" id="category-category" minlength="3" maxlength="10" required>
             <button id="category-submit" type="button">Submit</button>
         </form>
     </div>
