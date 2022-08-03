@@ -74,7 +74,7 @@ document.addEventListener("click", function(e) {
     if(e.target && e.target.className === "edit-btn") {
         editIndex = e.target.parentElement.parentElement.getAttribute("original-index")
         displayController.displayEdit(editIndex);
-    } else if(handleTask.categories.includes(e.target.id) && e.target.tagName == "A") {
+    } else if(handleTask.categories.includes(e.target.id.toLowerCase()) && e.target.tagName == "A") {
         let selectedCategory = e.target.innerText.toLowerCase();
         currentSection = selectedCategory;
         catSection(selectedCategory);
@@ -154,7 +154,7 @@ function viewAll() {
     let currentArray = handleTask.allCurrentTasks();
     displayController.displayTask(currentArray);
     currentSection = "viewAll";
-    addBtn.style.display = "flex";
+    addBtn.style.visibility = "visible";
 
 }
 
@@ -163,7 +163,7 @@ function today() {
     let dailyArray = handleTask.dailyFilter();
     displayController.displayTask(dailyArray);
     displayController.tableTitle("Viewing Today's Tasks");
-    addBtn.style.display = "flex";
+    addBtn.style.visibility = "visible";
 
 }
 
@@ -172,7 +172,7 @@ function thisWeek() {
     let weeklyArray = handleTask.weeklyFilter();
     displayController.displayTask(weeklyArray);
     displayController.tableTitle("Viewing This Week's Tasks");
-    addBtn.style.display = "flex";
+    addBtn.style.visibility = "visible";
 
 }
 
@@ -181,7 +181,7 @@ function completedTasks() {
     let completedArray = handleTask.completedFilter();
     displayController.displayTask(completedArray);
     displayController.tableTitle("Viewing Completed Tasks");
-    addBtn.style.display = "none";
+    addBtn.style.visibility = "hidden";
 }
 
 function catSection(selectedCategory) {
