@@ -86,7 +86,7 @@ const displayController = (function() {
         modalControl.showEditModal();
 
         let priority = handleTask.itemArray[editIndex].priority;
-        document.getElementById("edit-priority").value = priority;
+        document.querySelector(`input[name="edit-priority"][value="${priority}"]`).checked = true;
 
         let title = handleTask.itemArray[editIndex].title;
         document.getElementById("edit-title").value = title;

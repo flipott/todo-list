@@ -14,7 +14,7 @@ let statusIndex;
 submitModal.addEventListener("click", function() {
 
     if (formValidate("submitModal")) {
-        let priority = document.getElementById("priority").value;
+        let priority = document.querySelector('input[name="priority"]:checked').value;
         let title = document.getElementById("title").value;
         let description = document.getElementById("description").value;
         let dueDate = document.getElementById("due-date").value;
@@ -95,7 +95,7 @@ document.addEventListener("click", function(e) {
 //Edits item in array and DOM
 document.getElementById("edit-submit").addEventListener("click", function() {
     if (formValidate("editModal")) {
-        let newPriority = document.getElementById("edit-priority").value;
+        let newPriority = document.querySelector('input[name="edit-priority"]:checked').value;
         let newTitle = document.getElementById("edit-title").value;
         let newDescription = document.getElementById("edit-description").value;
         let newDueDate = document.getElementById("edit-date").value;
