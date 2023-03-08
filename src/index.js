@@ -3,7 +3,7 @@ import { handleTask } from "./taskController";
 
 const submitModal = document.getElementById("modal-submit");
 const addBtn = document.getElementById("add-item");
-let newItem;
+const catBtn = document.getElementsByClassName("remove-cat-btn")[0];
 let editIndex;
 let currentSection = "viewAll"
 let oldCategory;
@@ -18,6 +18,7 @@ submitModal.addEventListener("click", function() {
         let title = document.getElementById("title").value;
         let description = document.getElementById("description").value;
         let dueDate = document.getElementById("due-date").value;
+        dueDate = new Date(dueDate).toLocaleDateString('en-US', {timeZone: 'UTC'});
         let category = document.getElementById("main-category").value;
         let status = false;
         
@@ -72,9 +73,9 @@ function formValidate(modal) {
 //Controls edit modal
 document.addEventListener("click", function(e) {
     if(e.target && e.target.className === "edit-btn") {
-        editIndex = e.target.parentElement.parentElement.getAttribute("original-index")
+        editIndex = e.target.parentElement.parentElement.parentElement.getAttribute("original-index")
         displayController.displayEdit(editIndex);
-    } else if(handleTask.categories.includes(e.target.id.toLowerCase()) && e.target.tagName == "A") {
+    } else if(handleTask.categories.includes(e.target.id.toLowerCase())) {
         let selectedCategory = e.target.innerText.toLowerCase();
         currentSection = selectedCategory;
         catSection(selectedCategory);
@@ -98,6 +99,8 @@ document.getElementById("edit-submit").addEventListener("click", function() {
         let newTitle = document.getElementById("edit-title").value;
         let newDescription = document.getElementById("edit-description").value;
         let newDueDate = document.getElementById("edit-date").value;
+        const [year, month, day] = newDueDate.split("-");
+        newDueDate = `${parseInt(month)}/${parseInt(day)}/${year}`
         let newCategory = document.getElementById("edit-category").value;
 
         if (newCategory === "add") {
@@ -155,7 +158,8 @@ function viewAll() {
     displayController.displayTask(currentArray);
     currentSection = "viewAll";
     addBtn.style.visibility = "visible";
-
+    catBtn.style.visibility = "hidden";
+    displayController.highlightSection("view-all");
 }
 
 function today() {
@@ -164,7 +168,8 @@ function today() {
     displayController.displayTask(dailyArray);
     displayController.tableTitle("Viewing Today's Tasks");
     addBtn.style.visibility = "visible";
-
+    catBtn.style.visibility = "hidden";
+    displayController.highlightSection("today");
 }
 
 function thisWeek() {
@@ -173,7 +178,8 @@ function thisWeek() {
     displayController.displayTask(weeklyArray);
     displayController.tableTitle("Viewing This Week's Tasks");
     addBtn.style.visibility = "visible";
-
+    catBtn.style.visibility = "hidden";
+    displayController.highlightSection("this-week");
 }
 
 function completedTasks() {
@@ -182,6 +188,8 @@ function completedTasks() {
     displayController.displayTask(completedArray);
     displayController.tableTitle("Viewing Completed Tasks");
     addBtn.style.visibility = "hidden";
+    catBtn.style.visibility = "hidden";
+    displayController.highlightSection("completed-tasks");
 }
 
 function catSection(selectedCategory) {
@@ -189,16 +197,20 @@ function catSection(selectedCategory) {
     let categoryArray = handleTask.categoryFilter(selectedCategory);
     displayController.tableTitle("Viewing all " + selectedCategory + " tasks");
     displayController.displayTask(categoryArray);
+    displayController.highlightSection(selectedCategory);
+    displayController.setRemoveCategory(selectedCategory);
+    catBtn.style.visibility = "visible";
+    addBtn.style.visibility = "visible";
 }
 
 document.getElementById("category-submit").addEventListener("click", function() {
     if (formValidate("categoryModal")) {
         const newCategory = document.getElementById("category-category").value.toLowerCase();
         handleTask.addCategory(newCategory);
-        catSection(newCategory);
         displayController.displayUpdateCategory();
         displayController.modalControl.hideCategoryModal();
         displayController.resetForms();
+        catSection(newCategory);
     };
 })
 
@@ -245,3 +257,5 @@ function sectionSwitcher() {
 
     displayController.resetForms();
 }
+
+viewAll()
