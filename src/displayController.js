@@ -94,8 +94,12 @@ const displayController = (function() {
         let description = handleTask.itemArray[editIndex].description;
         document.getElementById("edit-description").value = description;
 
-        let dueDate = handleTask.itemArray[editIndex].dueDate;
-        document.getElementById("edit-date").value = dueDate;
+        let dateStr = handleTask.itemArray[editIndex].dueDate;
+        dateStr = new Date(dateStr);
+        dateStr = dateStr.toISOString();
+        dateStr = dateStr.slice(0,10);
+        document.getElementById("edit-date").value = dateStr;
+        
 
         let category = handleTask.itemArray[editIndex].category;
         document.getElementById("edit-category").value = category;
@@ -123,60 +127,50 @@ const displayController = (function() {
             let dueDate = currentArray[i].dueDate;
             let category = currentArray[i].category;
             let status = currentArray[i].status;
-            let originalArrayIndex = currentArray[i].dataSet;
-    
+            let originalArrayIndex = currentArray[i].dataSet;    
             let newRow = document.createElement("tr");
             newRow.setAttribute("data-set", i);
             newRow.setAttribute("original-index", originalArrayIndex);
     
             let newInputData = document.createElement("td");
     
-            let linkWrapper = document.createElement("a");
+            let linkWrapper = document.createElement("button");
             linkWrapper.setAttribute("class", "status-change");
-            linkWrapper.setAttribute("href", "#");
             linkWrapper.setAttribute("onclick", "return false;");
     
-            let svgWrapper = document.createElement("img");
+            let imgWrapper = document.createElement("img");
     
             if (status === true) {
-                svgWrapper.setAttribute("src", "../src/images/checked.svg");
-                svgWrapper.setAttribute("width", "20px");
-                svgWrapper.setAttribute("height", "20px");
-                svgWrapper.setAttribute("class", "checked");
+                imgWrapper.setAttribute("src", "../src/images/completed-status-light.svg");
+                imgWrapper.setAttribute("class", "checked");
             } else {
-                svgWrapper.setAttribute("src", "../src/images/unchecked.svg");
-                svgWrapper.setAttribute("width", "20px");
-                svgWrapper.setAttribute("height", "20px");
-                svgWrapper.setAttribute("class", "unchecked");
+                imgWrapper.setAttribute("src", "../src/images/pending-status-light.svg");
+                imgWrapper.setAttribute("class", "unchecked");
             }
+
+            imgWrapper.setAttribute("width", "25px");
+            imgWrapper.setAttribute("height", "25px");
+
     
-            linkWrapper.appendChild(svgWrapper);
+            linkWrapper.appendChild(imgWrapper);
             newInputData.appendChild(linkWrapper);
             newRow.appendChild(newInputData);
     
             let newPriorityData = document.createElement("td");
-            let svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-            svg.setAttribute("viewBox", "0 0 12 12");
-            svg.setAttribute("width", "20px");
-            svg.setAttribute("height", "20px");
-            svg.setAttribute("overflow", "visible");
-    
-            let circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-            circle.setAttribute("cx", "6");
-            circle.setAttribute("cy", "6");
-            circle.setAttribute("r", "6");
-            circle.setAttribute("fill-rule", "evenodd");
-    
+            let priorityImgWrapper = document.createElement("img");
+
             if (priority === "low") {
-                circle.setAttribute("fill", "#638f65");
+                priorityImgWrapper.setAttribute("src", "../src/images/low-priority.svg");
             } else if (priority === "medium") {
-                circle.setAttribute("fill", "#b0ba65");
+                priorityImgWrapper.setAttribute("src", "../src/images/medium-priority.svg");
             } else {
-                circle.setAttribute("fill", "#ad6749");
+                priorityImgWrapper.setAttribute("src", "../src/images/high-priority.svg");
             }
+
+            priorityImgWrapper.setAttribute("width", "25px");
+            priorityImgWrapper.setAttribute("height", "25px");
     
-            svg.appendChild(circle);
-            newPriorityData.appendChild(svg);
+            newPriorityData.appendChild(priorityImgWrapper);
             newRow.appendChild(newPriorityData);
     
             let newTitleData = document.createElement("td");
@@ -195,9 +189,20 @@ const displayController = (function() {
             newCategoryData.innerHTML = category;
             newRow.appendChild(newCategoryData);
     
-            let newEditBtn = document.createElement("td");
-            newEditBtn.innerHTML = '<button class="edit-btn">✎</button>';
-            newRow.appendChild(newEditBtn);
+            let newEditData = document.createElement("td");
+            
+            let newEditBtn = document.createElement("button");
+
+            let newEditImg = document.createElement("img");
+            newEditImg.setAttribute("src", "../src/images/edit-light.svg");
+            newEditImg.setAttribute("class", "edit-btn");
+
+            newEditImg.setAttribute("width", "25px");
+            newEditImg.setAttribute("height", "25px");
+
+            newEditBtn.appendChild(newEditImg);
+            newEditData.appendChild(newEditBtn);
+            newRow.appendChild(newEditData);
     
             document.querySelector("tbody").appendChild(newRow);
         };
@@ -252,11 +257,13 @@ const displayController = (function() {
         editPlaceholder.innerText = "Select your option";
         editCategoryList.insertBefore(editPlaceholder, editLastOption);
     
-        for (let i=0;i<handleTask.categories.length;i++) {
-    
+        for (let i=0;i<handleTask.categories.length;i++) {    
             let currentCat = handleTask.categories[i].charAt(0).toUpperCase() + handleTask.categories[i].slice(1);
             let newElement = document.createElement("li");
-            newElement.innerHTML = '<a id="' + currentCat + '"href="#" onclick="return false;">' + currentCat + '</a><button class="remove-cat-btn" data-set = ' + i + '>✎</button>'
+            newElement.setAttribute("data-set", i);
+            newElement.setAttribute("id", currentCat.toLowerCase());
+            newElement.classList.add("sidebar-item");
+            newElement.innerText = currentCat;
             sidebarList.appendChild(newElement);
     
             let newOption = document.createElement("option");
@@ -274,7 +281,28 @@ const displayController = (function() {
         document.getElementById("edit-text-category").style.display = "none";
     }
 
-    return { modalControl, displayEdit, displayEditCategory, displayTask, tableTitle, resetForms, displayUpdateCategory}
+    function highlightSection(section) {
+        const elementList = document.querySelectorAll(".highlight-polygon");
+        elementList.forEach((element) => {
+            element.remove();
+        });
+
+        const element = document.getElementById(section);
+        const highlight = document.createElement("img");
+        highlight.setAttribute("src", "../src/images/highlight-polygon.svg")
+        highlight.setAttribute("class", "highlight-polygon")
+        highlight.setAttribute("height", "25px")
+        highlight.setAttribute("width", "25px")
+        element.appendChild(highlight);
+    }
+
+    function setRemoveCategory(section) {
+        const dataSet = document.getElementById(section).parentElement.getAttribute("data-set");
+        const button = document.getElementsByClassName("remove-cat-btn")[0];
+        button.setAttribute("data-set", dataSet);
+    }
+
+    return { modalControl, displayEdit, displayEditCategory, displayTask, tableTitle, resetForms, displayUpdateCategory, highlightSection, setRemoveCategory }
 
 })();
 
