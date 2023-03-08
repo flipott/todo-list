@@ -375,6 +375,13 @@ form button {
     padding: 0;
 }
 
+.modal-radio {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    font-size: 1.5rem;
+}
+
 #modal-close img {
     height: 25px;
 }
