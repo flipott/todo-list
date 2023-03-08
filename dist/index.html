@@ -21,19 +21,18 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Roboto+Condensed:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap" rel="stylesheet"> 
 </head>
 <body>
     <div class="container">
-        <div class="header">To-Do List</div>
+        <div class="header"><img src="../src/images/logo-light.png" alt="Taskly" /></div>
         <div class="main-content">
             <div class="sidebar">
                 <p class="sidebar-title">Filter</p>
                 <ul class="sidebar-list">
-                    <li><a id="view-all" href="#" onclick="return false;">View All</a></li>
-                    <li><a id="today" href="#" onclick="return false;">Today</a></li>
-                    <li><a id="this-week" href="#" onclick="return false;">This Week</a></li>
-                    <li><a id="completed-tasks" href="#" onclick="return false;">Completed Tasks</a></li>
+                    <li class="sidebar-item" id="view-all">All</a></li>
+                    <li class="sidebar-item" id="today">Today</a></li>
+                    <li class="sidebar-item" id="this-week">This Week</a></li>
+                    <li class="sidebar-item" id="completed-tasks">Completed</a></li>
                 </ul>
                 <p class="sidebar-title">Categories</p>
                 <ul class="sidebar-list" id="category-list">
@@ -43,10 +42,13 @@
             <div class="table-section">
                 <div class="table-top">
                     <h1 id="table-title">Viewing All Tasks</h1>
-                    <button id="add-item">Add item</button>
+                    <div>
+                        <button id="add-item">Add item</button>
+                        <button class="remove-cat-btn">Edit category</button>
+                    </div>
                 </div>
                 <table id="main-table">
-                    <tr>
+                    <tr class="table-headers">
                         <th>Status</th>
                         <th>Priority</th>
                         <th>Title</th>
@@ -61,8 +63,8 @@
 
         <div class="modal">
             <div class="modal-header">
-                <p id="modal-title">Add an item</p>
-                <button id="modal-close">x</button> 
+                <p id="modal-title">Add item</p>
+                <button id="modal-close"><img src="../src/images/delete.svg" /></button> 
             </div>
             <form id="modal-form">
                 <label for="priority">Priority</label>
@@ -89,6 +91,7 @@
                 <button id="modal-submit" type="button">Add item</button>
             </form>
         </div>
+        <div class="footer">Copyright © 2023 Phillip Ott</div>
     </div>
     
     <div class="edit-modal">
