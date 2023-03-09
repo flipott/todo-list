@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Taskly</title>
     <script src="main.js" defer></script>
     <script type="text/javascript" defer>
         function checkValue(val){
@@ -21,32 +21,48 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Roboto+Condensed:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap" rel="stylesheet"> 
+    <link rel="icon" type="image/x-icon" href="../src/images/favicon.ico">
 </head>
 <body>
     <div class="container">
-        <div class="header">To-Do List</div>
+        <div class="header"><img src="../src/images/logo-light.png" alt="Taskly" /></div>
         <div class="main-content">
+            <button id="mobile-sidebar-toggle">
+                <div class="menu-line"></div>
+                <div class="menu-line"></div>
+                <div class="menu-line"></div>
+            </button>
             <div class="sidebar">
                 <p class="sidebar-title">Filter</p>
                 <ul class="sidebar-list">
-                    <li><a id="view-all" href="#" onclick="return false;">View All</a></li>
-                    <li><a id="today" href="#" onclick="return false;">Today</a></li>
-                    <li><a id="this-week" href="#" onclick="return false;">This Week</a></li>
-                    <li><a id="completed-tasks" href="#" onclick="return false;">Completed Tasks</a></li>
+                    <li class="sidebar-item" id="view-all">All</a></li>
+                    <li class="sidebar-item" id="today">Today</a></li>
+                    <li class="sidebar-item" id="this-week">This Week</a></li>
+                    <li class="sidebar-item" id="completed-tasks">Completed</a></li>
                 </ul>
                 <p class="sidebar-title">Categories</p>
                 <ul class="sidebar-list" id="category-list">
                 </ul>
                 <button id="add-cat">Add category...</button>
+                <div class="toggle-section">
+                    <img id="sun" src="../src/images/sun-light.svg" />
+                    <label class="dark-mode-switch">
+                        <input type="checkbox">
+                        <span class="slider"></span>
+                    </label>
+                    <img id="moon" src="../src/images/moon-light.svg" />
+                </div>
             </div>
             <div class="table-section">
                 <div class="table-top">
                     <h1 id="table-title">Viewing All Tasks</h1>
-                    <button id="add-item">Add item</button>
+                    <div>
+                        <button id="add-item">Add item</button>
+                        <button class="remove-cat-btn">Edit category</button>
+                    </div>
                 </div>
                 <table id="main-table">
-                    <tr>
+                    <tr class="table-headers">
                         <th>Status</th>
                         <th>Priority</th>
                         <th>Title</th>
@@ -58,105 +74,122 @@
                 </table>
             </div>
         </div>
-
+        <div class="footer">Copyright © 2023 Phillip Ott</div>
+    </div>
+    <div class="modal-container">
         <div class="modal">
             <div class="modal-header">
-                <p id="modal-title">Add an item</p>
-                <button id="modal-close">x</button> 
+                <p id="modal-title">Add item</p>
+                <button id="modal-close"><img src="../src/images/delete.svg" /></button> 
             </div>
             <form id="modal-form">
                 <label for="priority">Priority</label>
-                <select id="priority" name="priority" required>
-                    <option value="low">Low</option>
-                    <option value="medium">Medium</option>
-                    <option value="high">High</option>
-                </select>
-
+                <div class="modal-radio">
+                    <div>
+                        <input type="radio" id="low" name="priority" value="low" checked />
+                        <label for="low">Low</label>    
+                    </div>
+                    <div>
+                        <input type="radio" id="medium" name="priority" value="medium" />
+                        <label for="medium">Medium</label>    
+                    </div>
+                    <div>
+                        <input type="radio" id="high" name="priority" value="high" />
+                        <label for="high">High</label>    
+                    </div>
+                </div>
                 <label for="title">Title</label>
                 <input type="text" name="title" id="title" minlength="1" maxlength="15" required>
-
+    
                 <label for="description">Description</label>
                 <input type="text" name="description" id="description" maxlength="25" placeholder="Optional">
-
+    
                 <label for="due-date">Due Date</label>
                 <input type="date" name="due-date" id="due-date" required>
-
+    
                 <label for="category">Category</label>
                 <select name="category" id="main-category" onchange="checkValue(this.value);" required></select>
-                <input type="text" name="category" id ="main-text-category" style="display:none;">
-
-
+                <input type="text" name="category" minlength="3" maxlength="10" id ="main-text-category" style="display:none;">
+    
+    
                 <button id="modal-submit" type="button">Add item</button>
             </form>
         </div>
-    </div>
     
-    <div class="edit-modal">
-        <div class="modal-header">
-            <p id="modal-title">Edit item</p>
-            <button id="edit-close">x</button> 
+        <div class="edit-modal">
+            <div class="modal-header">
+                <p id="modal-title">Edit item</p>
+                <button id="edit-close"><img src="../src/images/delete.svg" /></button> 
+            </div>
+            <form id="edit-form">
+                <label for="edit-priority">Priority</label>
+                <div class="modal-radio">
+                    <div>
+                        <input type="radio" id="edit-low" name="edit-priority" value="low" checked />
+                        <label for="edit-low">Low</label>    
+                    </div>
+                    <div>
+                        <input type="radio" id="edit-medium" name="edit-priority" value="medium" />
+                        <label for="edit-medium">Medium</label>    
+                    </div>
+                    <div>
+                        <input type="radio" id="edit-high" name="edit-priority" value="high" />
+                        <label for="edit-high">High</label>    
+                    </div>
+                </div>
+    
+                <label for="title">Title</label>
+                <input type="text" name="title" id="edit-title" minlength="1" maxlength="15" required>
+    
+                <label for="description">Description</label>
+                <input type="text" name="description" id="edit-description" maxlength="25" placeholder="Optional">
+    
+                <label for="due-date">Due Date</label>
+                <input type="date" name="due-date" id="edit-date" required>
+    
+                <label for="category">Category</label>
+                <select name="category" id="edit-category" onchange="checkValue(this.value);" required></select>
+                <input type="text" name="category" id ="edit-text-category" minlength="3" maxlength="10" style="display:none;">
+    
+                <button id="edit-submit" type="button">Edit item</button>
+                <button id="delete-item" type="button">Delete item</button>
+            </form>
         </div>
-        <form id="edit-form">
-            <label for="priority">Priority</label>
-            <select id="edit-priority" name="priority">
-                <option value="low">Low</option>
-                <option value="medium">Medium</option>
-                <option value="high">High</option>
-            </select>
-
-            <label for="title">Title</label>
-            <input type="text" name="title" id="edit-title" minlength="1" maxlength="15" required>
-
-            <label for="description">Description</label>
-            <input type="text" name="description" id="edit-description" maxlength="25" placeholder="Optional">
-
-            <label for="due-date">Due Date</label>
-            <input type="date" name="due-date" id="edit-date" required>
-
-            <label for="category">Category</label>
-            <select name="category" id="edit-category" onchange="checkValue(this.value);" required></select>
-            <input type="text" name="category" id ="edit-text-category" style="display:none;">
-
-            <button id="edit-submit" type="button">Edit item</button>
-            <button id="delete-item" type="button">Delete item</button>
-        </form>
-    </div>
-
-    <div class="category-modal">
-        <div class="modal-header">
-            <p id="modal-title">Add category</p>
-            <button id="category-close">x</button> 
+    
+        <div class="category-modal">
+            <div class="modal-header">
+                <p id="modal-title">Add category</p>
+                <button id="category-close">x</button> 
+            </div>
+            <form id="category-form">
+                <label for="category">Category Title</label>
+                <input type="text" name="category" id="category-category" minlength="3" maxlength="10" required>
+                <button id="category-submit" type="button">Submit</button>
+            </form>
         </div>
-        <form id="category-form">
-            <label for="category">Category Title</label>
-            <input type="text" name="category" id="category-category" minlength="3" maxlength="10" required>
-            <button id="category-submit" type="button">Submit</button>
-        </form>
-    </div>
-
-    <div class="edit-category-modal">
-        <div class="modal-header">
-            <p id="modal-title">Edit category</p>
-            <button id="edit-category-close">x</button> 
+    
+        <div class="edit-category-modal">
+            <div class="modal-header">
+                <p id="modal-title">Edit category</p>
+                <button id="edit-category-close">x</button> 
+            </div>
+            <form id="edit-category-form">
+                <label for="category">Category Title</label>
+                <input type="text" name="category" id="edit-category-sidebar" minlength="3" maxlength="10" required>
+                <button id="edit-category-submit" type="button">Submit</button>
+                <button id="delete-category" type="button">Delete category</button>
+            </form>
         </div>
-        <form id="edit-category-form">
-            <label for="category">Category Title</label>
-            <input type="text" name="category" id="edit-category-sidebar" minlength="3" required>
-            <button id="edit-category-submit" type="button">Submit</button>
-            <button id="delete-category" type="button">Delete category</button>
-        </form>
-    </div>
-
-    <div class="delete-category-warning">
-        <div class="modal-header">
-            <p id="modal-title">Are you sure you want to delete the <span id="delete-category-name"></span> category and all of its items?</p>
-            <div class="delete-buttons">
-                <button id="confirm-delete">Yes</button>
-                <button id="cancel-delete">No</button>
+    
+        <div class="delete-category-warning">
+            <div class="modal-header">
+                <p id="modal-title">Are you sure you want to delete the <span id="delete-category-name"></span> category and all of its items?</p>
+                <div class="delete-buttons">
+                    <button id="confirm-delete">Yes</button>
+                    <button id="cancel-delete">No</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
-
 </body>
 </html>
