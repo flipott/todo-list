@@ -229,9 +229,9 @@ if (storedTheme) {
 }
 
 if (storedTheme === "dark") {
-    document.querySelector(".header img").setAttribute("src", "images/logo-dark.png")
-    document.getElementById("sun").setAttribute("src", "images/sun-dark.svg");
-    document.getElementById("moon").setAttribute("src", "images/moon-dark.svg");
+    document.querySelector(".header img").setAttribute("src", "./images/logo-dark.png")
+    document.getElementById("sun").setAttribute("src", "./images/sun-dark.svg");
+    document.getElementById("moon").setAttribute("src", "./images/moon-dark.svg");
 }
 
 document.querySelector('.toggle-section input[type="checkbox"]').addEventListener("change", (e) => {
@@ -239,17 +239,17 @@ document.querySelector('.toggle-section input[type="checkbox"]').addEventListene
         currentTheme = "dark"
         localStorage.setItem('theme', "dark");
         document.documentElement.setAttribute("data-theme", "dark");
-        document.querySelector(".header img").setAttribute("src", "/images/logo-dark.png")
+        document.querySelector(".header img").setAttribute("src", "./images/logo-dark.png")
         document.getElementById("sun").setAttribute("src", "./images/sun-dark.svg");
-        document.getElementById("moon").setAttribute("src", "../images/moon-dark.svg");
+        document.getElementById("moon").setAttribute("src", "./images/moon-dark.svg");
         viewAll();
     } else {
         currentTheme = "light"
         localStorage.setItem('theme', "light");
         document.documentElement.setAttribute("data-theme", "light");
-        document.querySelector(".header img").setAttribute("src", "dist/images/logo-light.png")
-        document.getElementById("sun").setAttribute("src", "./dist/images/sun-light.svg");
-        document.getElementById("moon").setAttribute("src", "../dist/images/moon-light.svg");
+        document.querySelector(".header img").setAttribute("src", "./images/logo-light.png")
+        document.getElementById("sun").setAttribute("src", "./images/sun-light.svg");
+        document.getElementById("moon").setAttribute("src", "./images/moon-light.svg");
         viewAll();
     }
 })
