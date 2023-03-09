@@ -159,10 +159,10 @@ const displayController = (function() {
             let imgWrapper = document.createElement("img");
     
             if (status === true) {
-                imgWrapper.setAttribute("src", `../src/images/completed-status-${theme}.svg`);
+                imgWrapper.setAttribute("src", `images/completed-status-${theme}.svg`);
                 imgWrapper.setAttribute("class", "checked");
             } else {
-                imgWrapper.setAttribute("src", `../src/images/pending-status-${theme}.svg`);
+                imgWrapper.setAttribute("src", `images/pending-status-${theme}.svg`);
                 imgWrapper.setAttribute("class", "unchecked");
             }
 
@@ -178,11 +178,11 @@ const displayController = (function() {
             let priorityImgWrapper = document.createElement("img");
 
             if (priority === "low") {
-                priorityImgWrapper.setAttribute("src", "../src/images/low-priority.svg");
+                priorityImgWrapper.setAttribute("src", "images/low-priority.svg");
             } else if (priority === "medium") {
-                priorityImgWrapper.setAttribute("src", "../src/images/medium-priority.svg");
+                priorityImgWrapper.setAttribute("src", "images/medium-priority.svg");
             } else {
-                priorityImgWrapper.setAttribute("src", "../src/images/high-priority.svg");
+                priorityImgWrapper.setAttribute("src", "images/high-priority.svg");
             }
 
             priorityImgWrapper.setAttribute("width", "25px");
@@ -212,7 +212,7 @@ const displayController = (function() {
             let newEditBtn = document.createElement("button");
 
             let newEditImg = document.createElement("img");
-            newEditImg.setAttribute("src", `../src/images/edit-${theme}.svg`);
+            newEditImg.setAttribute("src", `images/edit-${theme}.svg`);
             newEditImg.setAttribute("class", "edit-btn");
 
             newEditImg.setAttribute("width", "25px");
@@ -307,7 +307,7 @@ const displayController = (function() {
 
         const element = document.getElementById(section);
         const highlight = document.createElement("img");
-        highlight.setAttribute("src", "../src/images/highlight-polygon.svg")
+        highlight.setAttribute("src", "images/highlight-polygon.svg")
         highlight.setAttribute("class", "highlight-polygon")
         highlight.setAttribute("height", "25px")
         highlight.setAttribute("width", "25px")
