@@ -9,6 +9,9 @@ let currentSection = "viewAll"
 let oldCategory;
 let newCategory;
 let statusIndex;
+let currentTheme = "light";
+const storedTheme = localStorage.getItem('theme');
+
 
 //Fire DOM and task events when a new to-do item is submitted
 submitModal.addEventListener("click", function() {
@@ -152,10 +155,11 @@ document.getElementById("completed-tasks").addEventListener("click", function() 
     completedTasks();
 });
 
+
 function viewAll() {
     displayController.tableTitle("Viewing All Tasks");
     let currentArray = handleTask.allCurrentTasks();
-    displayController.displayTask(currentArray);
+    displayController.displayTask(currentArray, currentTheme);
     currentSection = "viewAll";
     addBtn.style.visibility = "visible";
     catBtn.style.visibility = "hidden";
@@ -165,7 +169,7 @@ function viewAll() {
 function today() {
     currentSection = "today";
     let dailyArray = handleTask.dailyFilter();
-    displayController.displayTask(dailyArray);
+    displayController.displayTask(dailyArray, currentTheme);
     displayController.tableTitle("Viewing Today's Tasks");
     addBtn.style.visibility = "visible";
     catBtn.style.visibility = "hidden";
@@ -175,7 +179,7 @@ function today() {
 function thisWeek() {
     currentSection = "thisWeek";
     let weeklyArray = handleTask.weeklyFilter();
-    displayController.displayTask(weeklyArray);
+    displayController.displayTask(weeklyArray, currentTheme);
     displayController.tableTitle("Viewing This Week's Tasks");
     addBtn.style.visibility = "visible";
     catBtn.style.visibility = "hidden";
@@ -185,7 +189,7 @@ function thisWeek() {
 function completedTasks() {
     currentSection = "completedTasks";
     let completedArray = handleTask.completedFilter();
-    displayController.displayTask(completedArray);
+    displayController.displayTask(completedArray, currentTheme);
     displayController.tableTitle("Viewing Completed Tasks");
     addBtn.style.visibility = "hidden";
     catBtn.style.visibility = "hidden";
@@ -196,12 +200,61 @@ function catSection(selectedCategory) {
     currentSection = selectedCategory;
     let categoryArray = handleTask.categoryFilter(selectedCategory);
     displayController.tableTitle("Viewing all " + selectedCategory + " tasks");
-    displayController.displayTask(categoryArray);
+    displayController.displayTask(categoryArray, currentTheme);
     displayController.highlightSection(selectedCategory);
     displayController.setRemoveCategory(selectedCategory);
     catBtn.style.visibility = "visible";
     addBtn.style.visibility = "visible";
 }
+
+document.getElementById("mobile-sidebar-toggle").addEventListener("click", function() {
+    const sidebar = document.querySelector(".sidebar");
+    const menuLineList = document.querySelectorAll(".menu-line");
+
+    if (sidebar.style.display === "flex") {
+        sidebar.style.display = "none";
+        menuLineList.forEach((line) => {
+            line.classList.remove("active");
+        });
+    } else {
+        sidebar.style.display = "flex";
+        menuLineList.forEach((line) => {
+            line.classList.add("active");
+        });
+    }
+});
+
+if (storedTheme) {
+    document.documentElement.setAttribute('data-theme', storedTheme)
+}
+
+if (storedTheme === "dark") {
+    document.querySelector(".header img").setAttribute("src", "../src/images/logo-dark.png")
+    document.getElementById("sun").setAttribute("src", "../src/images/sun-dark.svg");
+    document.getElementById("moon").setAttribute("src", "../src/images/moon-dark.svg");
+}
+
+document.querySelector('.toggle-section input[type="checkbox"]').addEventListener("change", (e) => {
+    if (e.target.checked) {
+        currentTheme = "dark"
+        localStorage.setItem('theme', "dark");
+        document.documentElement.setAttribute("data-theme", "dark");
+        document.querySelector(".header img").setAttribute("src", "../src/images/logo-dark.png")
+        document.getElementById("sun").setAttribute("src", "../src/images/sun-dark.svg");
+        document.getElementById("moon").setAttribute("src", "../src/images/moon-dark.svg");
+        viewAll();
+    } else {
+        currentTheme = "light"
+        localStorage.setItem('theme', "light");
+        document.documentElement.setAttribute("data-theme", "light");
+        document.querySelector(".header img").setAttribute("src", "../src/images/logo-light.png")
+        document.getElementById("sun").setAttribute("src", "../src/images/sun-light.svg");
+        document.getElementById("moon").setAttribute("src", "../src/images/moon-light.svg");
+        viewAll();
+    }
+})
+
+
 
 document.getElementById("category-submit").addEventListener("click", function() {
     if (formValidate("categoryModal")) {
@@ -217,6 +270,7 @@ document.getElementById("category-submit").addEventListener("click", function() 
 document.getElementById("delete-category").addEventListener("click", function() {
     displayController.modalControl.hideEditCategoryModal();
 
+    displayController.modalControl.activateContainer();
     document.getElementById("delete-category-name").innerText = oldCategory;
     document.querySelector(".delete-category-warning").style.display = "flex"
     
@@ -224,6 +278,7 @@ document.getElementById("delete-category").addEventListener("click", function() 
     document.getElementById("confirm-delete").addEventListener("click", function() {
         handleTask.deleteCategory(oldCategory);
         document.querySelector(".delete-category-warning").style.display = "none";
+        displayController.modalControl.deactivateContainer();
         displayController.displayUpdateCategory();
         viewAll();
     });
