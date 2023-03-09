@@ -41,43 +41,61 @@ const displayController = (function() {
         function showModal() {
             hideCategoryModal();
             hideEditModal();
+            activateContainer();
             document.querySelector(".modal").style.display = "flex";
         }
 
         function hideModal() {
+            deactivateContainer();
             document.querySelector(".modal").style.display = "none";
         }
 
         function showEditModal() {
             hideModal();
             hideCategoryModal();
+            activateContainer();
             document.querySelector(".edit-modal").style.display = "flex";
         }
 
         function hideEditModal() {
+            deactivateContainer();
             document.querySelector(".edit-modal").style.display = "none";
         }
 
         function hideCategoryModal() {
+            deactivateContainer();
             document.querySelector(".category-modal").style.display = "none";
         }
 
         function showEditCategoryModal() {
+            activateContainer();
             document.querySelector(".edit-category-modal").style.display = "flex";
         }
 
         function hideEditCategoryModal() {
+            deactivateContainer();
             document.querySelector(".edit-category-modal").style.display = "none";
         }
 
         function showCategoryModal() {
             hideModal();
             hideEditModal();
+            activateContainer();
             document.querySelector(".category-modal").style.display = "flex";
         }
 
+        function activateContainer() {
+            document.querySelector(".modal-container").style.display = "flex";
+            document.querySelector(".modal-container").style["pointer-events"] = "all";
+        }
+
+        function deactivateContainer() {
+            document.querySelector(".modal-container").style.display = "none";
+            document.querySelector(".modal-container").style["pointer-events"] = "none";
+        }
+
         displayUpdateCategory();
-        return { showModal, hideModal, showEditModal, hideEditModal, showCategoryModal, hideCategoryModal, showEditCategoryModal, hideEditCategoryModal }
+        return { activateContainer, deactivateContainer, showModal, hideModal, showEditModal, hideEditModal, showCategoryModal, hideCategoryModal, showEditCategoryModal, hideEditCategoryModal }
     })();
 
     //Fills out page form for editing a to-do item
@@ -112,7 +130,7 @@ const displayController = (function() {
     }
     
     //Populate tasks on page
-    function displayTask(currentArray) {
+    function displayTask(currentArray, theme) {
     
         //Remove currently displayed data
         while (document.querySelector("tbody").childNodes.length > 1) {
@@ -141,10 +159,10 @@ const displayController = (function() {
             let imgWrapper = document.createElement("img");
     
             if (status === true) {
-                imgWrapper.setAttribute("src", "../src/images/completed-status-light.svg");
+                imgWrapper.setAttribute("src", `../src/images/completed-status-${theme}.svg`);
                 imgWrapper.setAttribute("class", "checked");
             } else {
-                imgWrapper.setAttribute("src", "../src/images/pending-status-light.svg");
+                imgWrapper.setAttribute("src", `../src/images/pending-status-${theme}.svg`);
                 imgWrapper.setAttribute("class", "unchecked");
             }
 
@@ -194,7 +212,7 @@ const displayController = (function() {
             let newEditBtn = document.createElement("button");
 
             let newEditImg = document.createElement("img");
-            newEditImg.setAttribute("src", "../src/images/edit-light.svg");
+            newEditImg.setAttribute("src", `../src/images/edit-${theme}.svg`);
             newEditImg.setAttribute("class", "edit-btn");
 
             newEditImg.setAttribute("width", "25px");
@@ -297,7 +315,7 @@ const displayController = (function() {
     }
 
     function setRemoveCategory(section) {
-        const dataSet = document.getElementById(section).parentElement.getAttribute("data-set");
+        const dataSet = document.getElementById(section).getAttribute("data-set");
         const button = document.getElementsByClassName("remove-cat-btn")[0];
         button.setAttribute("data-set", dataSet);
     }
