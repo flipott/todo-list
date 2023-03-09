@@ -118,6 +118,7 @@ td {
     font-size: 1.1rem;
     padding: 6px 8px;
     min-width: 100px;
+    color: var(--black);
 }
 
 #add-item:hover,
@@ -331,14 +332,18 @@ form button {
 }
 
 #modal-close,
-#edit-close {
+#edit-close, 
+#category-close,
+#edit-category-close {
     background: none;
     margin: 0;
     padding: 0;
 }
 
 #modal-close img,
-#edit-close img {
+#edit-close img,
+#category-close img,
+#edit-category-close img {
     height: 25px;
 }
 
